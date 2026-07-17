@@ -60,4 +60,78 @@
             </select>
           </div>
         </div>
-        <
+        <button type="submit" class="btn btn-primary btn-block">Finalizar Venda</button>
+      </form>
+    </div>
+  </div>
+  <script type="module">
+    import { initApp, subscribe, getState, utils, handleLogout } from './js/app.js';
+    import { initAuth, getCurrentUser } from './js/auth.js';
+    import { createSale, deleteSale } from './js/sales.js';
+    const modal = document.getElementById('sale-modal');
+    const form = document.getElementById('sale-form');
+    function renderSales() {
+      const sales = getState('sales');
+      const container = document.getElementById('sales-list');
+      if (sales.length === 0) {
+        container.innerHTML = `<div style="text-align: center; padding: 3rem; color: var(--text-muted);"><p style="font-size: 3rem;">💰</p><p>Nenhuma venda.</p></div>`;
+        return;
+      }
+      container.innerHTML = sales.map(s => `
+        <div class="card" style="margin-bottom: 0.8rem;">
+          <div class="flex-between" style="flex-wrap: wrap; gap: 1rem;">
+            <div>
+              <strong>#${s.id.slice(0,6)}</strong>
+              <span style="color: var(--text-muted); margin-left: 0.8rem;">${utils.formatDate(s.createdAt)}</span>
+              <p>${s.clientName || 'Balcão'}</p>
+              <p style="color: var(--text-muted); font-size: 0.85rem;">${s.items || ''}</p>
+            </div>
+            <div style="text-align: right;">
+              <div style="font-weight: 700; color: var(--gold);">${utils.formatCurrency(s.total)}</div>
+              <div style="font-size: 0.8rem; color: var(--text-muted);">${s.paymentMethod || 'Dinheiro'}</div>
+              <button class="btn btn-danger btn-sm btn-delete" data-id="${s.id}" style="margin-top: 0.3rem;">🗑️</button>
+            </div>
+          </div>
+        </div>
+      `).join('');
+      container.querySelectorAll('.btn-delete').forEach(btn => btn.addEventListener('click', async () => {
+        if (!confirm('Excluir esta venda?')) return;
+        const result = await deleteSale(btn.dataset.id);
+        if (result.success) alert('Venda excluída!');
+        else alert('Erro: ' + result.error);
+      }));
+    }
+    document.getElementById('btn-new-sale').addEventListener('click', () => {
+      form.reset();
+      modal.classList.add('active');
+    });
+    document.getElementById('sale-modal-close').addEventListener('click', () => modal.classList.remove('active'));
+    modal.addEventListener('click', (e) => { if (e.target === modal) modal.classList.remove('active'); });
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const data = {
+        clientName: document.getElementById('sale-client').value.trim() || 'Balcão',
+        items: document.getElementById('sale-items').value.trim() || 'Venda avulsa',
+        total: parseFloat(document.getElementById('sale-total').value) || 0,
+        paymentMethod: document.getElementById('sale-payment').value
+      };
+      const result = await createSale(data);
+      if (result.success) {
+        modal.classList.remove('active');
+        alert('Venda finalizada!');
+        renderSales();
+      } else alert('Erro: ' + result.error);
+    });
+    async function init() {
+      await initAuth();
+      const user = getCurrentUser();
+      if (!user) return;
+      initApp();
+      subscribe('sales', renderSales);
+      renderSales();
+      document.getElementById('logout-btn').addEventListener('click', handleLogout);
+    }
+    init();
+  </script>
+</body>
+</html>
