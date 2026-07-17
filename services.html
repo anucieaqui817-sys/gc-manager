@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Serviços - Galego Cell Manager</title>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+  <div class="app-container">
+    <aside class="sidebar">
+      <div class="sidebar-brand"><h1>Galego Cell</h1></div>
+      <nav class="sidebar-nav">
+        <a href="/dashboard.html">📊 Dashboard</a>
+        <a href="/services.html" class="active">🔧 Ordens de Serviço</a>
+        <a href="/products.html">📦 Produtos</a>
+        <a href="/clients.html">👤 Clientes</a>
+        <a href="/sales.html">💰 Vendas</a>
+        <a href="/settings.html">⚙️ Configurações</a>
+        <a href="/reports.html">📈 Relatórios</a>
+      </nav>
+      <div class="sidebar-footer"><a href="#" id="logout-btn" style="color: var(--danger);">🚪 Sair</a></div>
+    </aside>
+    <main class="main-content">
+      <header class="flex-between" style="margin-bottom: 1.5rem; flex-wrap: wrap; gap: 1rem;">
+        <h1>🔧 Ordens de Serviço</h1>
+        <div style="display: flex; gap: 0.5rem; flex-wrap: wrap;">
+          <button class="btn btn-primary" id="btn-new-service">+ Nova OS</button>
+          <select id="filter-status" class="input-field" style="width: auto; padding: 0.5rem 2rem 0.5rem 0.8rem;">
+            <option value="all">Todos</option>
+            <option value="Recebido">Recebido</option>
+            <option value="Em Análise">Em Análise</option>
+            <option value="Aguardando Aprovação">Aguardando Aprovação</option>
+            <option value="Aprovado">Aprovado</option>
+            <option value="Em Reparo">Em Reparo</option>
+            <option value="Aguardando Peça">Aguardando Peça</option>
+            <option value="Concluído">Concluído</option>
+            <option value="Entregue">Entregue</option>
+            <option value="Cancelado">Cancelado</option>
+          </select>
+        </div>
+      </header>
+      <div id="services-list"><p style="color: var(--text-muted); text-align: center; padding: 2rem;">Carregando...</p></div>
+    </main>
+  </div>
+  <div class="modal-overlay" id="service-modal">
+    <div class="modal">
+      <div class="modal-header">
+        <h2 id="modal-title">Nova OS</h2>
+        <button class="modal-close" id="modal-close">✕</button>
+      </div>
+      <form id="service-form">
+        <div class="input-group">
+          <label for="service-client-name">Nome do Cliente *</label>
+          <input type="text" id="service-client-name" class="input-field" placeholder="Nome completo" required />
+        </div>
+        <div class="input-group">
+          <label for="service-client-phone">Telefone</label>
+          <input type="tel" id="service-client-phone" class="input-field" placeholder="(81) 99999-9999" />
+        </div>
+        <div class="grid-2">
+          <div class="input-group">
+            <label for="service-brand">Marca *</label>
+            <input type="text" id="service-brand" class="input-field" placeholder="Apple, Samsung" required />
+          </div>
+          <div class="input-group">
+            <label for="service-model">Modelo *</label>
+            <input type="text" id="service-model" class="input-field" placeholder="iPhone 12, Galaxy S21" required />
+          </div>
+        </div>
+        <div class="grid-2">
+          <div class="input-group">
+            <label for="service-imei">IMEI</label>
+            <input type="text" id="service-imei" class="input-field" placeholder="15 dígitos" />
+          </div>
+          <div class="input-group">
+            <label for="service-color">Cor</label>
+            <input type="text" id="service-color" class="input-field" placeholder="Preto, Branco" />
+          </div>
+        </div>
+        <div class="input-group">
+          <label>Checklist de Entrada</label>
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.5rem; padding: 0.5rem; background: rgba(255,255,255,0.05); border-radius: var(--radius-md);">
+            <label style="display: flex; align-items: center; gap: 0.5rem; font-size: 0.9rem;"><input type="checkbox" id="check-screen" /> Tela íntegra</label>
+            <label style="display: flex; align-items: center; gap: 0.5rem; font-size: 0.9rem;"><input type="checkbox" id="check-touch" /> Touch OK</label>
+            <label style="display: flex; align-items: center; gap: 0.5rem; font-size: 0.9rem;"><input type="checkbox" id="check-camera" /> Câmeras OK</label>
+            <label style="display: flex; align-items: center; gap: 0.5rem; font-size: 0.9rem;"><input type="checkbox" id="check-audio" /> Áudio OK</label>
+          </div>
+        </div>
+        <div class="input-group">
+          <label for="service-description">Descrição do Problema *</label>
+          <textarea id="service-description" class="input-field" placeholder="Descreva o defeito..." required></textarea>
+        </div>
+        <div class="grid-2">
+          <div class="input-group">
+            <label for="service-total">Valor Total *</label>
+            <input type="number" id="service-total" class="input-field" placeholder="0.00" step="0.01" required />
+          </div>
+          <div class="input-group">
+            <label for="service-status">Status</label>
+            <select id="service-status" class="input-field">
+              <option value="Recebido">Recebido</option>
+              <option value="Em Análise">Em Análise</option>
+              <option value="Aprovado">Aprovado</option>
+              <option value="Em Reparo">Em Reparo</option>
+              <option value="Concluído">Concluído</option>
+              <option value="Entregue">Entregue</option>
+            </select>
+          </div>
+        </div>
+        <button type="submit" class="btn btn-primary btn-block">Salvar OS</button>
+      </form>
+    </div>
+  </div>
+  <script type="module">
+    import { initApp, subscribe, getState, utils, handleLogout } from './js/app.js';
+    import { initAuth, getCurrentUser } from './js/auth.js';
+    import { createService, updateService, deleteService, updateServiceStatus } from './js/services.js';
+    const modal = document.getElementById('service-modal');
+    const form = document.getElementById('service-form');
+    let editingId = null;
+    function renderServices(filter = 'all') {
+      const services = getState('services');
+      const filtered = filter === 'all' ? services : services.filter(s => s.status === filter);
+      const container = document.getElementById('services-list');
+      if (filtered.length === 0) {
+        container.innerHTML = `<div style="text-align: center; padding: 3rem; color: var(--text-muted);"><p style="font-size: 3rem;">🔧</p><p>Nenhuma OS encontrada.</p><button class="btn btn-primary" style="margin-top: 1rem;" onclick="document.getElementById('btn-new-service').click()">Criar nova OS</button></div>`;
+        return;
+      }
+      container.innerHTML = filtered.map(service => `
+        <div class="card" style="margin-bottom: 1rem;">
+          <div class="flex-between" style="flex-wrap: wrap; gap: 1rem;">
+            <div>
+              <div style="display: flex; align-items: center; gap: 0.8rem; flex-wrap: wrap;">
+                <strong>${service.code || 'OS'}</strong>
+                <span class="badge badge-${service.status?.toLowerCase().replace(' ', '') || 'received'}">${service.status || 'Recebido'}</span>
+                <span style="color: var(--text-muted); font-size: 0.85rem;">${utils.formatDate(service.createdAt)}</span>
+              </div>
+              <p><strong>${service.clientName || service.client || 'Cliente'}</strong></p>
+              <p style="color: var(--text-muted); font-size: 0.9rem;">${service.brand || ''} ${service.model || ''}</p>
+              <p style="color: var(--text-muted); font-size: 0.9rem;">${service.description || 'Sem descrição'}</p>
+            </div>
+            <div style="text-align: right;">
+              <div style="font-size: 1.2rem; font-weight: 700; color: var(--gold);">${utils.formatCurrency(service.total)}</div>
+              <div style="display: flex; gap: 0.3rem; margin-top: 0.5rem; flex-wrap: wrap; justify-content: flex-end;">
+                <button class="btn btn-secondary btn-sm btn-edit" data-id="${service.id}">✏️ Editar</button>
+                <button class="btn btn-danger btn-sm btn-delete" data-id="${service.id}">🗑️</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      `).join('');
+      container.querySelectorAll('.btn-edit').forEach(btn => btn.addEventListener('click', () => openEditModal(btn.dataset.id)));
+      container.querySelectorAll('.btn-delete').forEach(btn => btn.addEventListener('click', async () => {
+        if (!confirm('Excluir esta OS?')) return;
+        const result = await deleteService(btn.dataset.id);
+        if (result.success) { alert('OS excluída!'); renderServices(document.getElementById('filter-status').value); }
+        else alert('Erro: ' + result.error);
+      }));
+    }
+    document.getElementById('btn-new-service').addEventListener('click', () => {
+      editingId = null;
+      document.getElementById('modal-title').textContent = 'Nova OS';
+      form.reset();
+      document.getElementById('service-status').value = 'Recebido';
+      modal.classList.add('active');
+    });
+    async function openEditModal(id) {
+      editingId = id;
+      const services = getState('services');
+      const service = services.find(s => s.id === id);
+      if (!service) return;
+      document.getElementById('modal-title').textContent = 'Editar OS #' + (service.code || id.slice(0,6));
+      document.getElementById('service-client-name').value = service.clientName || '';
+      document.getElementById('service-client-phone').value = service.clientPhone || '';
+      document.getElementById('service-brand').value = service.brand || '';
+      document.getElementById('service-model').value = service.model || '';
+      document.getElementById('service-imei').value = service.imei || '';
+      document.getElementById('service-color').value = service.color || '';
+      document.getElementById('service-description').value = service.description || '';
+      document.getElementById('service-total').value = service.total || '0';
+      document.getElementById('service-status').value = service.status || 'Recebido';
+      const checklist = service.checklist || {};
+      document.querySelectorAll('#service-form input[type="checkbox"]').forEach(cb => cb.checked = checklist[cb.id] || false);
+      modal.classList.add('active');
+    }
+    document.getElementById('modal-close').addEventListener('click', () => modal.classList.remove('active'));
+    modal.addEventListener('click', (e) => { if (e.target === modal) modal.classList.remove('active'); });
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const checklist = {};
+      document.querySelectorAll('#service-form input[type="checkbox"]').forEach(cb => checklist[cb.id] = cb.checked);
+      const serviceData = {
+        clientName: document.getElementById('service-client-name').value.trim(),
+        clientPhone: document.getElementById('service-client-phone').value.trim(),
+        brand: document.getElementById('service-brand').value.trim(),
+        model: document.getElementById('service-model').value.trim(),
+        imei: document.getElementById('service-imei').value.trim(),
+        color: document.getElementById('service-color').value.trim(),
+        description: document.getElementById('service-description').value.trim(),
+        total: parseFloat(document.getElementById('service-total').value) || 0,
+        status: document.getElementById('service-status').value,
+        checklist
+      };
+      let result;
+      if (editingId) result = await updateService(editingId, serviceData);
+      else result = await createService(serviceData);
+      if (result.success) {
+        modal.classList.remove('active');
+        alert(editingId ? 'OS atualizada!' : 'OS criada! Código: ' + result.code);
+        renderServices(document.getElementById('filter-status').value);
+      } else alert('Erro: ' + result.error);
+    });
+    document.getElementById('filter-status').addEventListener('change', (e) => renderServices(e.target.value));
+    async function init() {
+      await initAuth();
+      const user = getCurrentUser();
+      if (!user) return;
+      initApp();
+      subscribe('services', () => renderServices(document.getElementById('filter-status').value));
+      renderServices('all');
+      document.getElementById('logout-btn').addEventListener('click', handleLogout);
+    }
+    init();
+  </script>
+</body>
+</html>
