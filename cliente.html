@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Clientes - Galego Cell Manager</title>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+  <div class="app-container">
+    <aside class="sidebar">
+      <div class="sidebar-brand"><h1>Galego Cell</h1></div>
+      <nav class="sidebar-nav">
+        <a href="/dashboard.html">📊 Dashboard</a>
+        <a href="/services.html">🔧 Ordens de Serviço</a>
+        <a href="/products.html">📦 Produtos</a>
+        <a href="/clients.html" class="active">👤 Clientes</a>
+        <a href="/sales.html">💰 Vendas</a>
+        <a href="/settings.html">⚙️ Configurações</a>
+        <a href="/reports.html">📈 Relatórios</a>
+      </nav>
+      <div class="sidebar-footer"><a href="#" id="logout-btn" style="color: var(--danger);">🚪 Sair</a></div>
+    </aside>
+    <main class="main-content">
+      <header class="flex-between" style="margin-bottom: 1.5rem; flex-wrap: wrap; gap: 1rem;">
+        <h1>👤 Clientes</h1>
+        <div style="display: flex; gap: 0.5rem; flex-wrap: wrap;">
+          <button class="btn btn-primary" id="btn-new-client">+ Novo Cliente</button>
+          <input type="text" id="client-search" class="input-field" placeholder="Buscar..." style="width: 150px;" />
+        </div>
+      </header>
+      <div id="clients-list"><p style="color: var(--text-muted); text-align: center; padding: 2rem;">Carregando...</p></div>
+    </main>
+  </div>
+  <div class="modal-overlay" id="client-modal">
+    <div class="modal">
+      <div class="modal-header">
+        <h2 id="client-modal-title">Novo Cliente</h2>
+        <button class="modal-close" id="client-modal-close">✕</button>
+      </div>
+      <form id="client-form">
+        <div class="input-group">
+          <label for="client-name">Nome *</label>
+          <input type="text" id="client-name" class="input-field" placeholder="Nome completo" required />
+        </div>
+        <div class="grid-2">
+          <div class="input-group">
+            <label for="client-phone">Telefone</label>
+            <input type="tel" id="client-phone" class="input-field" placeholder="(81) 99999-9999" />
+          </div>
+          <div class="input-group">
+            <label for="client-email">E-mail</label>
+            <input type="email" id="client-email" class="input-field" placeholder="email@exemplo.com" />
+          </div>
+        </div>
+        <div class="input-group">
+          <label for="client-address">Endereço</label>
+          <textarea id="client-address" class="input-field" placeholder="Rua, número, bairro..." rows="2"></textarea>
+        </div>
+        <button type="submit" class="btn btn-primary btn-block">Salvar</button>
+      </form>
+    </div>
+  </div>
+  <script type="module">
+    import { initApp, subscribe, getState, utils, handleLogout } from './js/app.js';
+    import { initAuth, getCurrentUser } from './js/auth.js';
+    import { createClient, updateClient, deleteClient } from './js/clients.js';
+    const modal = document.getElementById('client-modal');
+    const form = document.getElementById('client-form');
+    let editingId = null;
+    function renderClients(filter = '') {
+      const clients = getState('clients');
+      const filtered = filter ? clients.filter(c => c.name?.toLowerCase().includes(filter.toLowerCase()) || c.phone?.includes(filter)) : clients;
+      const container = document.getElementById('clients-list');
+      if (filtered.length === 0) {
+        container.innerHTML = `<div style="text-align: center; padding: 3rem; color: var(--text-muted);"><p style="font-size: 3rem;">👤</p><p>Nenhum cliente.</p></div>`;
+        return;
+      }
+      container.innerHTML = filtered.map(c => `
+        <div class="card" style="margin-bottom: 0.8rem;">
+          <div class="flex-between" style="flex-wrap: wrap; gap: 1rem;">
+            <div>
+              <strong>${c.name}</strong>
+              ${c.phone ? `<span style="color: var(--text-muted); margin-left: 0.8rem;">📞 ${c.phone}</span>` : ''}
+              ${c.email ? `<span style="color: var(--text-muted); margin-left: 0.8rem;">✉️ ${c.email}</span>` : ''}
+            </div>
+            <div style="display: flex; gap: 0.3rem;">
+              <button class="btn btn-secondary btn-sm btn-edit" data-id="${c.id}">✏️</button>
+              <button class="btn btn-danger btn-sm btn-delete" data-id="${c.id}">🗑️</button>
+            </div>
+          </div>
+        </div>
+      `).join('');
+      container.querySelectorAll('.btn-edit').forEach(btn => btn.addEventListener('click', () => openEditModal(btn.dataset.id)));
+      container.querySelectorAll('.btn-delete').forEach(btn => btn.addEventListener('click', async () => {
+        if (!confirm('Excluir este cliente?')) return;
+        const result = await deleteClient(btn.dataset.id);
+        if (result.success) { alert('Cliente excluído!'); renderClients(document.getElementById('client-search').value); }
+        else alert('Erro: ' + result.error);
+      }));
+    }
+    async function openEditModal(id) {
+      editingId = id;
+      const clients = getState('clients');
+      const client = clients.find(c => c.id === id);
+      if (!client) return;
+      document.getElementById('client-modal-title').textContent = 'Editar Cliente';
+      document.getElementById('client-name').value = client.name || '';
+      document.getElementById('client-phone').value = client.phone || '';
+      document.getElementById('client-email').value = client.email || '';
+      document.getElementById('client-address').value = client.address || '';
+      modal.classList.add('active');
+    }
+    document.getElementById('btn-new-client').addEventListener('click', () => {
+      editingId = null;
+      document.getElementById('client-modal-title').textContent = 'Novo Cliente';
+      form.reset();
+      modal.classList.add('active');
+    });
+    document.getElementById('client-modal-close').addEventListener('click', () => modal.classList.remove('active'));
+    modal.addEventListener('click', (e) => { if (e.target === modal) modal.classList.remove('active'); });
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const data = {
+        name: document.getElementById('client-name').value.trim(),
+        phone: document.getElementById('client-phone').value.trim(),
+        email: document.getElementById('client-email').value.trim(),
+        address: document.getElementById('client-address').value.trim()
+      };
+      let result;
+      if (editingId) result = await updateClient(editingId, data);
+      else result = await createClient(data);
+      if (result.success) {
+        modal.classList.remove('active');
+        alert(editingId ? 'Cliente atualizado!' : 'Cliente criado!');
+        renderClients(document.getElementById('client-search').value);
+      } else alert('Erro: ' + result.error);
+    });
+    document.getElementById('client-search').addEventListener('input', (e) => renderClients(e.target.value));
+    async function init() {
+      await initAuth();
+      const user = getCurrentUser();
+      if (!user) return;
+      initApp();
+      subscribe('clients', () => renderClients(document.getElementById('client-search').value));
+      renderClients('');
+      document.getElementById('logout-btn').addEventListener('click', handleLogout);
+    }
+    init();
+  </script>
+</body>
+</html>
