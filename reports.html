@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Relatórios - Galego Cell Manager</title>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+  <div class="app-container">
+    <aside class="sidebar">
+      <div class="sidebar-brand"><h1>Galego Cell</h1></div>
+      <nav class="sidebar-nav">
+        <a href="/dashboard.html">📊 Dashboard</a>
+        <a href="/services.html">🔧 Ordens de Serviço</a>
+        <a href="/products.html">📦 Produtos</a>
+        <a href="/clients.html">👤 Clientes</a>
+        <a href="/sales.html">💰 Vendas</a>
+        <a href="/settings.html">⚙️ Configurações</a>
+        <a href="/reports.html" class="active">📈 Relatórios</a>
+      </nav>
+      <div class="sidebar-footer"><a href="#" id="logout-btn" style="color: var(--danger);">🚪 Sair</a></div>
+    </aside>
+    <main class="main-content">
+      <h1 style="margin-bottom: 1.5rem;">📈 Relatórios</h1>
+      <div class="card" style="margin-bottom: 1.5rem;">
+        <div class="grid-2">
+          <div class="input-group">
+            <label for="report-start">Data Início</label>
+            <input type="date" id="report-start" class="input-field" />
+          </div>
+          <div class="input-group">
+            <label for="report-end">Data Fim</label>
+            <input type="date" id="report-end" class="input-field" />
+          </div>
+        </div>
+        <button class="btn btn-primary" id="btn-generate">Gerar</button>
+      </div>
+      <div class="stats-grid" id="report-summary">
+        <div class="stat-card"><div class="stat-value" id="report-total">R$ 0</div><div class="stat-label">Faturamento</div></div>
+        <div class="stat-card"><div class="stat-value" id="report-count">0</div><div class="stat-label">Transações</div></div>
+      </div>
+      <div class="card">
+        <h2>Detalhes</h2>
+        <div id="report-details"><p style="color: var(--text-muted);">Selecione um período e clique em "Gerar".</p></div>
+      </div>
+    </main>
+  </div>
+  <script type="module">
+    import { initApp, utils, handleLogout } from './js/app.js';
+    import { initAuth, getCurrentUser } from './js/auth.js';
+    import { getSalesReport, getServicesReport } from './js/reports.js';
+    const startInput = document.getElementById('report-start');
+    const endInput = document.getElementById('report-end');
+    const today = new Date();
+    const lastMonth = new Date(today);
+    lastMonth.setMonth(lastMonth.getMonth() - 1);
+    startInput.value = lastMonth.toISOString().split('T')[0];
+    endInput.value = today.toISOString().split('T')[0];
+    document.getElementById('btn-generate').addEventListener('click', async () => {
+      const start = startInput.value;
+      const end = endInput.value;
+      if (!start || !end) { alert('Selecione as datas.'); return; }
+      const sales = await getSalesReport(start, end);
+      document.getElementById('report-total').textContent = utils.formatCurrency(sales?.total || 0);
+      document.getElementById('report-count').textContent = sales?.count || 0;
+      const details = document.getElementById('report-details');
+      if (!sales || sales.count === 0) {
+        details.innerHTML = '<p style="color: var(--text-muted);">Nenhuma venda no período.</p>';
+        return;
+      }
+      details.innerHTML = `<p>Total de vendas: <strong>${utils.formatCurrency(sales.total)}</strong></p><p>Quantidade: ${sales.count} vendas</p>`;
+    });
+    document.getElementById('btn-generate').click();
+    async function init() {
+      await initAuth();
+      const user = getCurrentUser();
+      if (!user) return;
+      initApp();
+      document.getElementById('logout-btn').addEventListener('click', handleLogout);
+    }
+    init();
+  </script>
+</body>
+</html>
