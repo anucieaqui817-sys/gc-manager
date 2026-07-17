@@ -3,40 +3,354 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Clientes - Galego Cell Manager</title>
-  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="css/style.css" />
+  <title>Clientes - Galego Cell</title>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --neon-purple: #b400ff;
+      --neon-pink: #ff00c8;
+      --neon-cyan: #00d4ff;
+      --neon-green: #00ff88;
+      --neon-gold: #ffd700;
+      --neon-red: #ff3366;
+      --bg: #0a0a12;
+      --bg-card: rgba(16, 14, 30, 0.88);
+      --border: rgba(180, 0, 255, 0.15);
+      --text: #f0eaff;
+      --text-muted: #b8a6d6;
+      --text-dim: #6a5a8a;
+      --shadow: rgba(180, 0, 255, 0.15);
+    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: 'DM Sans', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      display: flex;
+    }
+    ::-webkit-scrollbar { width: 6px; }
+    ::-webkit-scrollbar-track { background: var(--bg); }
+    ::-webkit-scrollbar-thumb { background: var(--neon-purple); border-radius: 3px; }
+
+    .sidebar {
+      width: 220px;
+      background: var(--bg-card);
+      border-right: 1px solid var(--border);
+      padding: 1.5rem 0;
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+      position: sticky;
+      top: 0;
+      backdrop-filter: blur(12px);
+    }
+    .sidebar-brand {
+      padding: 0 1.5rem;
+      margin-bottom: 2rem;
+      display: flex;
+      align-items: center;
+      gap: 0.8rem;
+    }
+    .sidebar-brand .logo {
+      width: 40px;
+      height: 40px;
+      background: linear-gradient(135deg, var(--neon-purple), var(--neon-pink));
+      border-radius: 1rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 800;
+      font-size: 1.1rem;
+      color: #0a0a12;
+    }
+    .sidebar-brand h1 { font-size: 1.1rem; font-weight: 800; }
+    .sidebar-brand h1 span {
+      background: linear-gradient(135deg, var(--neon-purple), var(--neon-pink));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    .sidebar-nav {
+      flex: 1;
+      padding: 0 0.8rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.2rem;
+    }
+    .sidebar-nav a {
+      display: flex;
+      align-items: center;
+      gap: 0.8rem;
+      padding: 0.7rem 1rem;
+      border-radius: 0.8rem;
+      color: var(--text-muted);
+      text-decoration: none;
+      font-weight: 500;
+      transition: all 0.3s ease;
+      font-size: 0.9rem;
+    }
+    .sidebar-nav a:hover { background: rgba(180, 0, 255, 0.08); color: var(--text); }
+    .sidebar-nav a.active {
+      background: rgba(180, 0, 255, 0.12);
+      color: var(--neon-purple);
+      border-right: 3px solid var(--neon-purple);
+    }
+    .sidebar-footer {
+      padding: 1rem 1.5rem;
+      border-top: 1px solid var(--border);
+    }
+    .sidebar-footer a {
+      color: var(--neon-red);
+      text-decoration: none;
+      font-weight: 500;
+      transition: color 0.3s ease;
+    }
+    .sidebar-footer a:hover { color: var(--neon-gold); }
+
+    .main {
+      flex: 1;
+      padding: 1.5rem;
+      overflow-x: hidden;
+    }
+    .header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 1.5rem;
+      flex-wrap: wrap;
+      gap: 1rem;
+    }
+    .header h1 { font-size: 1.5rem; font-weight: 800; }
+    .header h1 span { color: var(--neon-purple); }
+    .header-actions {
+      display: flex;
+      gap: 0.5rem;
+      flex-wrap: wrap;
+    }
+    .btn {
+      padding: 0.6rem 1.2rem;
+      border-radius: 0.8rem;
+      border: none;
+      font-weight: 600;
+      font-size: 0.85rem;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      font-family: 'DM Sans', sans-serif;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+    }
+    .btn-primary {
+      background: linear-gradient(135deg, var(--neon-purple), var(--neon-pink));
+      color: #0a0a12;
+    }
+    .btn-primary:hover {
+      box-shadow: 0 0 40px rgba(180, 0, 255, 0.3);
+      transform: translateY(-2px);
+    }
+    .btn-secondary {
+      background: var(--bg-card);
+      color: var(--text);
+      border: 1px solid var(--border);
+    }
+    .btn-secondary:hover {
+      border-color: var(--neon-purple);
+      box-shadow: 0 0 30px var(--shadow);
+    }
+    .btn-danger {
+      background: rgba(255, 51, 102, 0.15);
+      color: var(--neon-red);
+      border: 1px solid rgba(255, 51, 102, 0.2);
+    }
+    .btn-danger:hover {
+      background: rgba(255, 51, 102, 0.25);
+      box-shadow: 0 0 30px rgba(255, 51, 102, 0.1);
+    }
+    .btn-sm { padding: 0.3rem 0.8rem; font-size: 0.75rem; }
+
+    .input-field {
+      padding: 0.6rem 1rem;
+      border-radius: 0.8rem;
+      background: rgba(10, 10, 20, 0.6);
+      border: 1px solid var(--border);
+      color: var(--text);
+      font-size: 0.85rem;
+      font-family: 'DM Sans', sans-serif;
+      outline: none;
+      transition: all 0.3s ease;
+      width: 200px;
+    }
+    .input-field:focus {
+      border-color: var(--neon-purple);
+      box-shadow: 0 0 30px var(--shadow);
+    }
+    .input-field::placeholder { color: var(--text-dim); }
+
+    .clients-list {
+      display: flex;
+      flex-direction: column;
+      gap: 0.6rem;
+    }
+    .client-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 1.2rem;
+      padding: 1rem 1.5rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+      transition: all 0.3s ease;
+    }
+    .client-card:hover {
+      border-color: rgba(180, 0, 255, 0.3);
+      box-shadow: 0 0 30px var(--shadow);
+    }
+    .client-card .info .name {
+      font-weight: 700;
+      font-size: 1rem;
+    }
+    .client-card .info .contact {
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      margin-top: 0.1rem;
+    }
+    .client-card .info .contact span { margin-right: 0.8rem; }
+    .client-card .actions {
+      display: flex;
+      gap: 0.3rem;
+    }
+
+    .empty-state {
+      text-align: center;
+      padding: 3rem;
+      color: var(--text-dim);
+    }
+    .empty-state .icon { font-size: 3rem; margin-bottom: 0.5rem; }
+
+    /* Modal */
+    .modal {
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.7);
+      backdrop-filter: blur(8px);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 1000;
+      padding: 1rem;
+      opacity: 0;
+      visibility: hidden;
+      transition: all 0.3s ease;
+    }
+    .modal.active {
+      opacity: 1;
+      visibility: visible;
+    }
+    .modal-content {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 1.5rem;
+      max-width: 500px;
+      width: 100%;
+      max-height: 90vh;
+      overflow-y: auto;
+      padding: 1.5rem 2rem;
+      transform: scale(0.95);
+      transition: transform 0.3s ease;
+    }
+    .modal.active .modal-content { transform: scale(1); }
+    .modal-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 1.5rem;
+      padding-bottom: 1rem;
+      border-bottom: 1px solid var(--border);
+    }
+    .modal-header h2 { font-size: 1.2rem; font-weight: 700; }
+    .modal-header h2 span { color: var(--neon-purple); }
+    .modal-close {
+      background: none;
+      border: none;
+      color: var(--text-muted);
+      font-size: 1.5rem;
+      cursor: pointer;
+      transition: color 0.3s ease;
+    }
+    .modal-close:hover { color: var(--text); }
+
+    .input-group { margin-bottom: 1rem; }
+    .input-group label {
+      display: block;
+      font-size: 0.7rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      color: var(--text-muted);
+      margin-bottom: 0.3rem;
+    }
+    .input-group .input-field {
+      width: 100%;
+      padding: 0.7rem 1rem;
+    }
+    .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+
+    @media (max-width: 768px) {
+      .sidebar { width: 60px; padding: 1rem 0; }
+      .sidebar-brand h1, .sidebar-nav a span, .sidebar-footer span { display: none; }
+      .sidebar-nav a { justify-content: center; padding: 0.7rem; }
+      .sidebar-brand { justify-content: center; padding: 0; }
+      .main { padding: 1rem; }
+      .grid-2 { grid-template-columns: 1fr; }
+      .input-field { width: 150px; }
+      .client-card { flex-direction: column; align-items: stretch; }
+      .client-card .actions { justify-content: flex-end; }
+      .modal-content { padding: 1.2rem; }
+    }
+  </style>
 </head>
 <body>
-  <div class="app-container">
-    <aside class="sidebar">
-      <div class="sidebar-brand"><h1>Galego Cell</h1></div>
-      <nav class="sidebar-nav">
-        <a href="/dashboard.html">📊 Dashboard</a>
-        <a href="/services.html">🔧 Ordens de Serviço</a>
-        <a href="/products.html">📦 Produtos</a>
-        <a href="/clients.html" class="active">👤 Clientes</a>
-        <a href="/sales.html">💰 Vendas</a>
-        <a href="/settings.html">⚙️ Configurações</a>
-        <a href="/reports.html">📈 Relatórios</a>
-      </nav>
-      <div class="sidebar-footer"><a href="#" id="logout-btn" style="color: var(--danger);">🚪 Sair</a></div>
-    </aside>
-    <main class="main-content">
-      <header class="flex-between" style="margin-bottom: 1.5rem; flex-wrap: wrap; gap: 1rem;">
-        <h1>👤 Clientes</h1>
-        <div style="display: flex; gap: 0.5rem; flex-wrap: wrap;">
-          <button class="btn btn-primary" id="btn-new-client">+ Novo Cliente</button>
-          <input type="text" id="client-search" class="input-field" placeholder="Buscar..." style="width: 150px;" />
-        </div>
-      </header>
-      <div id="clients-list"><p style="color: var(--text-muted); text-align: center; padding: 2rem;">Carregando...</p></div>
-    </main>
-  </div>
-  <div class="modal-overlay" id="client-modal">
-    <div class="modal">
+
+  <aside class="sidebar">
+    <div class="sidebar-brand">
+      <div class="logo">GC</div>
+      <h1>Galego <span>Cell</span></h1>
+    </div>
+    <nav class="sidebar-nav">
+      <a href="/dashboard.html">📊 <span>Dashboard</span></a>
+      <a href="/services.html">🔧 <span>Ordens de Serviço</span></a>
+      <a href="/products.html">📦 <span>Produtos</span></a>
+      <a href="/clients.html" class="active">👤 <span>Clientes</span></a>
+      <a href="/sales.html">💰 <span>Vendas</span></a>
+      <a href="/settings.html">⚙️ <span>Configurações</span></a>
+      <a href="/reports.html">📈 <span>Relatórios</span></a>
+    </nav>
+    <div class="sidebar-footer">
+      <a href="#" id="logout-btn">🚪 <span>Sair</span></a>
+    </div>
+  </aside>
+
+  <main class="main">
+    <div class="header">
+      <h1>👤 <span>Clientes</span></h1>
+      <div class="header-actions">
+        <button class="btn btn-primary" id="btn-new-client">+ Novo Cliente</button>
+        <input type="text" id="client-search" class="input-field" placeholder="🔍 Buscar..." />
+      </div>
+    </div>
+    <div class="clients-list" id="clients-list">
+      <div class="empty-state"><div class="icon">👤</div><p>Carregando...</p></div>
+    </div>
+  </main>
+
+  <!-- Modal -->
+  <div class="modal" id="client-modal">
+    <div class="modal-content">
       <div class="modal-header">
-        <h2 id="client-modal-title">Novo Cliente</h2>
+        <h2 id="client-modal-title">Novo <span>Cliente</span></h2>
         <button class="modal-close" id="client-modal-close">✕</button>
       </div>
       <form id="client-form">
@@ -46,49 +360,56 @@
         </div>
         <div class="grid-2">
           <div class="input-group">
-            <label for="client-phone">Telefone</label>
+            <label for="client-phone">📞 Telefone</label>
             <input type="tel" id="client-phone" class="input-field" placeholder="(81) 99999-9999" />
           </div>
           <div class="input-group">
-            <label for="client-email">E-mail</label>
+            <label for="client-email">✉️ E-mail</label>
             <input type="email" id="client-email" class="input-field" placeholder="email@exemplo.com" />
           </div>
         </div>
         <div class="input-group">
-          <label for="client-address">Endereço</label>
+          <label for="client-address">📍 Endereço</label>
           <textarea id="client-address" class="input-field" placeholder="Rua, número, bairro..." rows="2"></textarea>
         </div>
-        <button type="submit" class="btn btn-primary btn-block">Salvar</button>
+        <button type="submit" class="btn btn-primary" style="width:100%;justify-content:center;">💾 Salvar</button>
       </form>
     </div>
   </div>
+
   <script type="module">
     import { initApp, subscribe, getState, utils, handleLogout } from './js/app.js';
     import { initAuth, getCurrentUser } from './js/auth.js';
     import { createClient, updateClient, deleteClient } from './js/clients.js';
+
     const modal = document.getElementById('client-modal');
     const form = document.getElementById('client-form');
     let editingId = null;
+
     function renderClients(filter = '') {
       const clients = getState('clients');
-      const filtered = filter ? clients.filter(c => c.name?.toLowerCase().includes(filter.toLowerCase()) || c.phone?.includes(filter)) : clients;
+      const filtered = filter ? clients.filter(c => 
+        c.name?.toLowerCase().includes(filter.toLowerCase()) ||
+        c.phone?.includes(filter) ||
+        c.email?.toLowerCase().includes(filter.toLowerCase())
+      ) : clients;
       const container = document.getElementById('clients-list');
       if (filtered.length === 0) {
-        container.innerHTML = `<div style="text-align: center; padding: 3rem; color: var(--text-muted);"><p style="font-size: 3rem;">👤</p><p>Nenhum cliente.</p></div>`;
+        container.innerHTML = `<div class="empty-state"><div class="icon">👤</div><p>Nenhum cliente encontrado.</p></div>`;
         return;
       }
       container.innerHTML = filtered.map(c => `
-        <div class="card" style="margin-bottom: 0.8rem;">
-          <div class="flex-between" style="flex-wrap: wrap; gap: 1rem;">
-            <div>
-              <strong>${c.name}</strong>
-              ${c.phone ? `<span style="color: var(--text-muted); margin-left: 0.8rem;">📞 ${c.phone}</span>` : ''}
-              ${c.email ? `<span style="color: var(--text-muted); margin-left: 0.8rem;">✉️ ${c.email}</span>` : ''}
+        <div class="client-card">
+          <div class="info">
+            <div class="name">${c.name}</div>
+            <div class="contact">
+              ${c.phone ? `<span>📞 ${c.phone}</span>` : ''}
+              ${c.email ? `<span>✉️ ${c.email}</span>` : ''}
             </div>
-            <div style="display: flex; gap: 0.3rem;">
-              <button class="btn btn-secondary btn-sm btn-edit" data-id="${c.id}">✏️</button>
-              <button class="btn btn-danger btn-sm btn-delete" data-id="${c.id}">🗑️</button>
-            </div>
+          </div>
+          <div class="actions">
+            <button class="btn btn-secondary btn-sm btn-edit" data-id="${c.id}">✏️</button>
+            <button class="btn btn-danger btn-sm btn-delete" data-id="${c.id}">🗑️</button>
           </div>
         </div>
       `).join('');
@@ -100,26 +421,30 @@
         else alert('Erro: ' + result.error);
       }));
     }
+
     async function openEditModal(id) {
       editingId = id;
       const clients = getState('clients');
       const client = clients.find(c => c.id === id);
       if (!client) return;
-      document.getElementById('client-modal-title').textContent = 'Editar Cliente';
+      document.getElementById('client-modal-title').innerHTML = 'Editar <span>Cliente</span>';
       document.getElementById('client-name').value = client.name || '';
       document.getElementById('client-phone').value = client.phone || '';
       document.getElementById('client-email').value = client.email || '';
       document.getElementById('client-address').value = client.address || '';
       modal.classList.add('active');
     }
+
     document.getElementById('btn-new-client').addEventListener('click', () => {
       editingId = null;
-      document.getElementById('client-modal-title').textContent = 'Novo Cliente';
+      document.getElementById('client-modal-title').innerHTML = 'Novo <span>Cliente</span>';
       form.reset();
       modal.classList.add('active');
     });
+
     document.getElementById('client-modal-close').addEventListener('click', () => modal.classList.remove('active'));
     modal.addEventListener('click', (e) => { if (e.target === modal) modal.classList.remove('active'); });
+
     form.addEventListener('submit', async (e) => {
       e.preventDefault();
       const data = {
@@ -137,7 +462,9 @@
         renderClients(document.getElementById('client-search').value);
       } else alert('Erro: ' + result.error);
     });
+
     document.getElementById('client-search').addEventListener('input', (e) => renderClients(e.target.value));
+
     async function init() {
       await initAuth();
       const user = getCurrentUser();
@@ -149,5 +476,6 @@
     }
     init();
   </script>
+
 </body>
 </html>
