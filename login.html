@@ -1,213 +1,82 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
-
 <head>
-
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-<title>GC Manager • Login</title>
-
-<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;700&display=swap" rel="stylesheet">
-
-<script src="https://cdn.tailwindcss.com"></script>
-
-<script src="https://unpkg.com/lucide@latest"></script>
-
-<style>
-
-body{
-
-font-family:'DM Sans',sans-serif;
-
-background:#050505;
-
-}
-
-.gold{
-
-background:#D4AF37;
-
-}
-
-.gold-text{
-
-color:#D4AF37;
-
-}
-
-.card{
-
-background:#111;
-
-border:1px solid #2c2c2c;
-
-}
-
-input{
-
-background:#1a1a1a;
-
-border:1px solid #333;
-
-color:white;
-
-}
-
-input:focus{
-
-border-color:#D4AF37;
-
-outline:none;
-
-box-shadow:0 0 10px rgba(212,175,55,.4);
-
-}
-
-</style>
-
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Login - Galego Cell Manager</title>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="css/style.css" />
 </head>
-
-<body class="flex items-center justify-center min-h-screen">
-
-<div class="w-full max-w-md px-6">
-
-<div class="card rounded-3xl p-8 shadow-2xl">
-
-<div class="text-center">
-
-<img src="img/logo.png"
-
-class="w-24 h-24 mx-auto mb-5 rounded-full object-cover">
-
-<h1 class="text-3xl font-bold gold-text">
-
-GC Manager
-
-</h1>
-
-<p class="text-gray-400 mt-2">
-
-Sistema de Gestão Galego Cell
-
-</p>
-
-</div>
-
-<form id="loginForm" class="mt-8 space-y-5">
-
-<div>
-
-<label class="text-sm text-gray-300">
-
-E-mail
-
-</label>
-
-<input
-
-id="email"
-
-type="email"
-
-placeholder="Digite seu e-mail"
-
-class="w-full mt-2 p-3 rounded-xl">
-
-</div>
-
-<div>
-
-<label class="text-sm text-gray-300">
-
-Senha
-
-</label>
-
-<input
-
-id="password"
-
-type="password"
-
-placeholder="Digite sua senha"
-
-class="w-full mt-2 p-3 rounded-xl">
-
-</div>
-
-<div class="flex items-center justify-between text-sm">
-
-<label class="flex items-center gap-2">
-
-<input type="checkbox">
-
-<span class="text-gray-400">
-
-Lembrar acesso
-
-</span>
-
-</label>
-
-<a href="#" class="gold-text">
-
-Esqueci minha senha
-
-</a>
-
-</div>
-
-<button
-
-type="submit"
-
-class="gold w-full py-3 rounded-xl text-black font-bold text-lg hover:scale-105 transition">
-
-Entrar no Sistema
-
-</button>
-
-</form>
-
-<div class="mt-8 border-t border-gray-700 pt-5 text-center">
-
-<p class="text-gray-500 text-sm">
-
-GC Manager © 2026
-
-</p>
-
-<p class="gold-text text-xs mt-1">
-
-Versão 1.0
-
-</p>
-
-</div>
-
-</div>
-
-</div>
-
-<script>
-
-lucide.createIcons();
-
-document
-
-.getElementById("loginForm")
-
-.addEventListener("submit",function(e){
-
-e.preventDefault();
-
-window.location="index.html";
-
-});
-
-</script>
-
+<body class="login-page">
+  <div class="login-box">
+    <div class="logo">
+      <h1>Galego Cell</h1>
+      <p style="color: var(--text-muted); font-size: 0.85rem;">Sistema de Gestão</p>
+    </div>
+    <form id="login-form">
+      <div class="input-group">
+        <label for="email">E-mail</label>
+        <input type="email" id="email" class="input-field" placeholder="seu@email.com" required />
+      </div>
+      <div class="input-group">
+        <label for="password">Senha</label>
+        <input type="password" id="password" class="input-field" placeholder="••••••••" required />
+      </div>
+      <button type="submit" class="btn btn-primary btn-block">Entrar</button>
+    </form>
+    <div style="margin-top: 1rem; text-align: center; font-size: 0.85rem;">
+      <a href="#" id="forgot-password" style="color: var(--text-muted);">Esqueceu a senha?</a>
+    </div>
+    <div style="margin-top: 1.5rem; text-align: center; border-top: 1px solid var(--border); padding-top: 1.5rem; font-size: 0.8rem; color: var(--text-muted);">
+      Não tem uma conta? <a href="#" id="register-link">Criar conta</a>
+    </div>
+  </div>
+  <script type="module">
+    import { loginUser, registerUser, resetPassword, initAuth } from './js/auth.js';
+    const form = document.getElementById('login-form');
+    function showToast(message, type = 'success') {
+      alert(message);
+    }
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const email = document.getElementById('email').value;
+      const password = document.getElementById('password').value;
+      const result = await loginUser(email, password);
+      if (result.success) {
+        showToast('Login realizado com sucesso!');
+        setTimeout(() => window.location.href = '/dashboard.html', 500);
+      } else {
+        showToast('Erro: ' + result.error, 'error');
+      }
+    });
+    document.getElementById('forgot-password').addEventListener('click', async (e) => {
+      e.preventDefault();
+      const email = document.getElementById('email').value;
+      if (!email) { showToast('Digite seu e-mail primeiro.', 'warning'); return; }
+      const result = await resetPassword(email);
+      if (result.success) {
+        showToast('E-mail de recuperação enviado!');
+      } else {
+        showToast('Erro: ' + result.error, 'error');
+      }
+    });
+    document.getElementById('register-link').addEventListener('click', async (e) => {
+      e.preventDefault();
+      const email = prompt('Digite seu e-mail para criar uma conta:');
+      if (!email) return;
+      const password = prompt('Digite uma senha (mínimo 6 caracteres):');
+      if (!password || password.length < 6) {
+        showToast('A senha deve ter pelo menos 6 caracteres.', 'warning');
+        return;
+      }
+      const result = await registerUser(email, password);
+      if (result.success) {
+        showToast('Conta criada! Faça login para continuar.');
+      } else {
+        showToast('Erro: ' + result.error, 'error');
+      }
+    });
+    initAuth('/dashboard.html');
+  </script>
 </body>
-
 </html>
