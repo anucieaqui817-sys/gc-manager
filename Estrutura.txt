@@ -1,0 +1,31 @@
+gc-manager/
+│
+├── index.html
+├── login.html
+├── dashboard.html
+├── clientes.html
+├── ordens.html
+├── estoque.html
+├── financeiro.html
+├── empresa.html
+├── usuarios.html
+│
+├── assets/
+│   ├── css/
+│   ├── js/
+│   ├── images/
+│   └── icons/
+│
+├── firebase/
+│   ├── firebase.js
+│   ├── auth.js
+│   ├── firestore.js
+│   └── storage.js
+│
+├── components/
+│   ├── navbar.js
+│   ├── sidebar.js
+│   ├── modal.js
+│   └── toast.js
+│
+└── README.md
