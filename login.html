@@ -44,7 +44,7 @@
       const result = await loginUser(email, password);
       if (result.success) {
         showToast('Login realizado com sucesso!');
-        setTimeout(() => window.location.href = '/dashboard.html', 500);
+        setTimeout(() => window.location.href = 'dashboard.html', 500);
       } else {
         showToast('Erro: ' + result.error, 'error');
       }
@@ -76,7 +76,7 @@
         showToast('Erro: ' + result.error, 'error');
       }
     });
-    initAuth('/dashboard.html');
+    initAuth('dashboard.html');
   </script>
 </body>
 </html>
