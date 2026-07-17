@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Vendas - Galego Cell Manager</title>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+  <div class="app-container">
+    <aside class="sidebar">
+      <div class="sidebar-brand"><h1>Galego Cell</h1></div>
+      <nav class="sidebar-nav">
+        <a href="/dashboard.html">📊 Dashboard</a>
+        <a href="/services.html">🔧 Ordens de Serviço</a>
+        <a href="/products.html">📦 Produtos</a>
+        <a href="/clients.html">👤 Clientes</a>
+        <a href="/sales.html" class="active">💰 Vendas</a>
+        <a href="/settings.html">⚙️ Configurações</a>
+        <a href="/reports.html">📈 Relatórios</a>
+      </nav>
+      <div class="sidebar-footer"><a href="#" id="logout-btn" style="color: var(--danger);">🚪 Sair</a></div>
+    </aside>
+    <main class="main-content">
+      <header class="flex-between" style="margin-bottom: 1.5rem; flex-wrap: wrap; gap: 1rem;">
+        <h1>💰 Vendas</h1>
+        <button class="btn btn-primary" id="btn-new-sale">+ Nova Venda</button>
+      </header>
+      <div id="sales-list"><p style="color: var(--text-muted); text-align: center; padding: 2rem;">Carregando...</p></div>
+    </main>
+  </div>
+  <div class="modal-overlay" id="sale-modal">
+    <div class="modal">
+      <div class="modal-header">
+        <h2>Nova Venda</h2>
+        <button class="modal-close" id="sale-modal-close">✕</button>
+      </div>
+      <form id="sale-form">
+        <div class="input-group">
+          <label for="sale-client">Cliente</label>
+          <input type="text" id="sale-client" class="input-field" placeholder="Nome do cliente" />
+        </div>
+        <div class="input-group">
+          <label for="sale-items">Itens</label>
+          <textarea id="sale-items" class="input-field" placeholder="Ex: Película:2, Capinha:1" rows="2"></textarea>
+        </div>
+        <div class="grid-2">
+          <div class="input-group">
+            <label for="sale-total">Total *</label>
+            <input type="number" id="sale-total" class="input-field" placeholder="0.00" step="0.01" required />
+          </div>
+          <div class="input-group">
+            <label for="sale-payment">Pagamento</label>
+            <select id="sale-payment" class="input-field">
+              <option value="Dinheiro">Dinheiro</option>
+              <option value="Pix">Pix</option>
+              <option value="Cartão Crédito">Cartão Crédito</option>
+              <option value="Cartão Débito">Cartão Débito</option>
+            </select>
+          </div>
+        </div>
+        <
