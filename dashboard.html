@@ -1,708 +1,127 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
-
 <head>
-
-<meta charset="UTF-8">
-
-<meta name="viewport"
-content="width=device-width, initial-scale=1.0">
-
-<title>GC Manager | Dashboard</title>
-
-<link rel="icon" href="img/logo.png">
-
-<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-
-<script src="https://cdn.tailwindcss.com"></script>
-
-<script src="https://unpkg.com/lucide@latest"></script>
-
-<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-
-<style>
-
-*{
-
-margin:0;
-
-padding:0;
-
-box-sizing:border-box;
-
-font-family:'DM Sans',sans-serif;
-
-}
-
-body{
-
-background:#090909;
-
-color:white;
-
-overflow-x:hidden;
-
-}
-
-.sidebar{
-
-position:fixed;
-
-left:0;
-
-top:0;
-
-width:260px;
-
-height:100vh;
-
-background:#111;
-
-border-right:1px solid #2c2c2c;
-
-display:flex;
-
-flex-direction:column;
-
-}
-
-.logo{
-
-padding:30px;
-
-text-align:center;
-
-border-bottom:1px solid #2a2a2a;
-
-}
-
-.logo img{
-
-width:80px;
-
-height:80px;
-
-border-radius:50%;
-
-object-fit:cover;
-
-}
-
-.logo h2{
-
-margin-top:15px;
-
-color:#d4af37;
-
-font-size:28px;
-
-}
-
-.logo p{
-
-font-size:13px;
-
-color:#999;
-
-}
-
-.menu{
-
-padding:20px;
-
-display:flex;
-
-flex-direction:column;
-
-gap:8px;
-
-}
-
-.menu a{
-
-text-decoration:none;
-
-color:#ddd;
-
-padding:15px;
-
-border-radius:12px;
-
-display:flex;
-
-align-items:center;
-
-gap:12px;
-
-transition:.3s;
-
-font-size:15px;
-
-}
-
-.menu a:hover{
-
-background:#d4af37;
-
-color:#111;
-
-}
-
-.topbar{
-
-margin-left:260px;
-
-height:80px;
-
-background:#111;
-
-border-bottom:1px solid #2c2c2c;
-
-display:flex;
-
-align-items:center;
-
-justify-content:space-between;
-
-padding:0 30px;
-
-}
-
-.user{
-
-display:flex;
-
-align-items:center;
-
-gap:15px;
-
-}
-
-.user img{
-
-width:45px;
-
-height:45px;
-
-border-radius:50%;
-
-}
-
-.content{
-
-margin-left:260px;
-
-padding:30px;
-
-}
-
-.cards{
-
-display:grid;
-
-grid-template-columns:repeat(4,1fr);
-
-gap:20px;
-
-margin-top:25px;
-
-}
-
-.card{
-
-background:#151515;
-
-border:1px solid #2c2c2c;
-
-border-radius:18px;
-
-padding:25px;
-
-transition:.3s;
-
-}
-
-.card:hover{
-
-transform:translateY(-5px);
-
-border-color:#d4af37;
-
-}
-
-.card h3{
-
-font-size:14px;
-
-color:#888;
-
-}
-
-.card h1{
-
-margin-top:12px;
-
-font-size:34px;
-
-color:#d4af37;
-
-}
-
-.card p{
-
-margin-top:8px;
-
-font-size:13px;
-
-color:#aaa;
-
-}
-
-.section-title{
-
-margin-top:45px;
-
-margin-bottom:20px;
-
-font-size:24px;
-
-font-weight:bold;
-
-color:#d4af37;
-
-}
-
-.table{
-
-width:100%;
-
-background:#151515;
-
-border-radius:20px;
-
-overflow:hidden;
-
-border:1px solid #2c2c2c;
-
-}
-
-table{
-
-width:100%;
-
-border-collapse:collapse;
-
-}
-
-th{
-
-background:#1f1f1f;
-
-padding:18px;
-
-text-align:left;
-
-font-size:14px;
-
-}
-
-td{
-
-padding:18px;
-
-border-top:1px solid #2c2c2c;
-
-}
-
-.status{
-
-padding:8px 15px;
-
-border-radius:50px;
-
-font-size:12px;
-
-display:inline-block;
-
-}
-
-.aberta{
-
-background:#3b82f620;
-
-color:#60a5fa;
-
-}
-
-.andamento{
-
-background:#eab30820;
-
-color:#facc15;
-
-}
-
-.finalizada{
-
-background:#22c55e20;
-
-color:#4ade80;
-
-}
-
-.cancelada{
-
-background:#ef444420;
-
-color:#f87171;
-
-}
-
-.quick-actions{
-
-display:grid;
-
-grid-template-columns:repeat(4,1fr);
-
-gap:20px;
-
-margin-top:20px;
-
-}
-
-.action{
-
-background:#151515;
-
-border-radius:18px;
-
-padding:25px;
-
-border:1px solid #2c2c2c;
-
-text-align:center;
-
-cursor:pointer;
-
-transition:.3s;
-
-}
-
-.action:hover{
-
-background:#d4af37;
-
-color:#111;
-
-}
-
-.action i{
-
-width:35px;
-
-height:35px;
-
-margin-bottom:15px;
-
-}
-
-</style>
-
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Dashboard - Galego Cell Manager</title>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="css/style.css" />
 </head>
-
 <body>
-
-<div class="sidebar">
-
-<div class="logo">
-
-<img src="img/logo.png">
-
-<h2>GC Manager</h2>
-
-<p>Galego Cell</p>
-
-</div>
-
-<div class="menu">
-
-<a href="#"><i data-lucide="layout-dashboard"></i>Dashboard</a>
-
-<a href="#"><i data-lucide="users"></i>Clientes</a>
-
-<a href="#"><i data-lucide="package"></i>Produtos</a>
-
-<a href="#"><i data-lucide="wrench"></i>Ordens de Serviço</a>
-
-<a href="#"><i data-lucide="wallet"></i>Financeiro</a>
-
-<a href="#"><i data-lucide="bar-chart-3"></i>Relatórios</a>
-
-<a href="#"><i data-lucide="settings"></i>Configurações</a>
-
-<a href="#"><i data-lucide="user"></i>Perfil da Empresa</a>
-
-<a href="#"><i data-lucide="log-out"></i>Sair</a>
-
-</div>
-
-</div>
-
-<div class="topbar">
-
-<div>
-
-<h2>Dashboard</h2>
-
-<p style="color:#888">
-
-Bem-vindo ao GC Manager
-
-</p>
-
-</div>
-
-<div class="user">
-
-<div>
-
-<b>Administrador</b>
-
-<br>
-
-<span style="font-size:13px;color:#888">
-
-Online
-
-</span>
-
-</div>
-
-<img src="img/avatar.png">
-
-</div>
-
-</div>
-
-<div class="content">
-  <!-- Cards -->
-
-<div class="cards">
-
-    <div class="card">
-        <h3>Faturamento Hoje</h3>
-        <h1 id="todayRevenue">R$ 0,00</h1>
-        <p>Total vendido hoje</p>
-    </div>
-
-    <div class="card">
-        <h3>Ordens em Aberto</h3>
-        <h1 id="openOS">0</h1>
-        <p>Aguardando atendimento</p>
-    </div>
-
-    <div class="card">
-        <h3>Clientes</h3>
-        <h1 id="clients">0</h1>
-        <p>Clientes cadastrados</p>
-    </div>
-
-    <div class="card">
-        <h3>Produtos</h3>
-        <h1 id="products">0</h1>
-        <p>Itens cadastrados</p>
-    </div>
-
-</div>
-
-<h2 class="section-title">
-
-Ações Rápidas
-
-</h2>
-
-<div class="quick-actions">
-
-<div class="action">
-
-<i data-lucide="plus-circle"></i>
-
-<h3>Nova Ordem</h3>
-
-<p>Abrir uma OS</p>
-
-</div>
-
-<div class="action">
-
-<i data-lucide="package-plus"></i>
-
-<h3>Novo Produto</h3>
-
-<p>Cadastrar produto</p>
-
-</div>
-
-<div class="action">
-
-<i data-lucide="user-plus"></i>
-
-<h3>Novo Cliente</h3>
-
-<p>Cadastrar cliente</p>
-
-</div>
-
-<div class="action">
-
-<i data-lucide="wallet"></i>
-
-<h3>Financeiro</h3>
-
-<p>Entradas e saídas</p>
-
-</div>
-
-</div>
-
-<h2 class="section-title">
-
-Faturamento Mensal
-
-</h2>
-
-<div class="card">
-
-<canvas id="salesChart" height="100"></canvas>
-
-</div>
-
-<script>
-
-const ctx=document.getElementById('salesChart');
-
-new Chart(ctx,{
-
-type:'line',
-
-data:{
-
-labels:['Jan','Fev','Mar','Abr','Mai','Jun','Jul','Ago','Set','Out','Nov','Dez'],
-
-datasets:[{
-
-label:'Faturamento',
-
-data:[0,0,0,0,0,0,0,0,0,0,0,0],
-
-borderColor:'#d4af37',
-
-backgroundColor:'rgba(212,175,55,.15)',
-
-fill:true,
-
-tension:.4
-
-}]
-
-},
-
-options:{
-
-plugins:{
-
-legend:{
-
-labels:{
-
-color:'#fff'
-
-}
-
-}
-
-},
-
-scales:{
-
-x:{
-
-ticks:{color:'#aaa'}
-
-},
-
-y:{
-
-ticks:{color:'#aaa'}
-
-}
-
-}
-
-}
-
-});
-
-</script>
-
-<h2 class="section-title">
-
-Últimas Ordens de Serviço
-
-</h2>
-
-<div class="table">
-
-<table>
-
-<thead>
-
-<tr>
-
-<th>Nº OS</th>
-
-<th>Cliente</th>
-
-<th>Aparelho</th>
-
-<th>Status</th>
-
-<th>Valor</th>
-
-<th>Data</th>
-
-</tr>
-
-</thead>
-
-<tbody id="osTable">
-
-<tr>
-
-<td>GC-0001</td>
-
-<td>Exemplo</td>
-
-<td>iPhone 13</td>
-
-<td>
-
-<span class="status aberta">
-
-Recebido
-
-</span>
-
-</td>
-
-<td>R$ 250,00</td>
-
-<td>17/07/2026</td>
-
-</tr>
-
-</tbody>
-
-</table>
-
-</div>
+  <div class="app-container">
+    <aside class="sidebar">
+      <div class="sidebar-brand">
+        <h1>Galego Cell</h1>
+      </div>
+      <nav class="sidebar-nav">
+        <a href="/dashboard.html" class="active">📊 Dashboard</a>
+        <a href="/services.html">🔧 Ordens de Serviço</a>
+        <a href="/products.html">📦 Produtos</a>
+        <a href="/clients.html">👤 Clientes</a>
+        <a href="/sales.html">💰 Vendas</a>
+        <a href="/settings.html">⚙️ Configurações</a>
+        <a href="/reports.html">📈 Relatórios</a>
+      </nav>
+      <div class="sidebar-footer">
+        <a href="#" id="logout-btn" style="color: var(--danger);">🚪 Sair</a>
+      </div>
+    </aside>
+    <main class="main-content">
+      <header class="flex-between" style="margin-bottom: 1.5rem;">
+        <h1>Dashboard</h1>
+        <span id="current-date" style="color: var(--text-muted); font-size: 0.9rem;"></span>
+      </header>
+      <section class="stats-grid" id="stats-grid">
+        <div class="stat-card">
+          <div class="stat-value" id="stat-services">0</div>
+          <div class="stat-label">OS Abertas</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-value" id="stat-products">0</div>
+          <div class="stat-label">Produtos em Estoque</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-value" id="stat-clients">0</div>
+          <div class="stat-label">Clientes</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-value" id="stat-sales">R$ 0</div>
+          <div class="stat-label">Vendas Hoje</div>
+        </div>
+      </section>
+      <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 1rem; margin: 1rem 0;">
+        <a href="/services.html?action=new" class="btn btn-primary" style="justify-content: center; padding: 1rem;">🔧 Nova OS</a>
+        <a href="/sales.html?action=new" class="btn btn-primary" style="justify-content: center; padding: 1rem;">💰 Nova Venda</a>
+        <a href="/clients.html?action=new" class="btn btn-secondary" style="justify-content: center; padding: 1rem;">👤 Novo Cliente</a>
+        <a href="/products.html?action=new" class="btn btn-secondary" style="justify-content: center; padding: 1rem;">📦 Novo Produto</a>
+      </div>
+      <section class="card" style="margin-top: 1.5rem;">
+        <div class="flex-between" style="margin-bottom: 1rem;">
+          <h2>Últimas OS</h2>
+          <a href="/services.html" style="font-size: 0.85rem;">Ver todas →</a>
+        </div>
+        <div id="recent-services"><p style="color: var(--text-muted);">Carregando...</p></div>
+      </section>
+    </main>
+  </div>
+  <script type="module">
+    import { initApp, subscribe, getState, utils, handleLogout } from './js/app.js';
+    import { initAuth, getCurrentUser } from './js/auth.js';
+    document.getElementById('current-date').textContent = new Date().toLocaleDateString('pt-BR', {
+      weekday: 'long', day: '2-digit', month: 'long', year: 'numeric'
+    });
+    function updateStats() {
+      const services = getState('services');
+      const products = getState('products');
+      const clients = getState('clients');
+      const openServices = services.filter(s => s.status !== 'Concluído' && s.status !== 'Entregue' && s.status !== 'Cancelado');
+      document.getElementById('stat-services').textContent = openServices.length;
+      document.getElementById('stat-products').textContent = products.filter(p => (p.stock || 0) > 0).length;
+      document.getElementById('stat-clients').textContent = clients.length;
+      const today = new Date();
+      today.setHours(0,0,0,0);
+      const todaySales = getState('sales').filter(s => {
+        if (!s.createdAt) return false;
+        const d = s.createdAt.toDate ? s.createdAt.toDate() : new Date(s.createdAt);
+        d.setHours(0,0,0,0);
+        return d.getTime() === today.getTime();
+      });
+      const total = todaySales.reduce((sum, s) => sum + (s.total || 0), 0);
+      document.getElementById('stat-sales').textContent = utils.formatCurrency(total);
+    }
+    function renderRecentServices() {
+      const services = getState('services').slice(0, 5);
+      const container = document.getElementById('recent-services');
+      if (services.length === 0) {
+        container.innerHTML = '<p style="color: var(--text-muted);">Nenhuma OS registrada.</p>';
+        return;
+      }
+      container.innerHTML = services.map(service => `
+        <div style="display: flex; justify-content: space-between; align-items: center; padding: 0.6rem 0; border-bottom: 1px solid var(--border);">
+          <div>
+            <strong>${service.code || 'OS'}</strong>
+            <span style="color: var(--text-muted); margin-left: 0.5rem;">${service.clientName || service.client || 'Cliente'}</span>
+          </div>
+          <div>
+            <span class="badge badge-${service.status?.toLowerCase().replace(' ', '') || 'received'}">${service.status || 'Recebido'}</span>
+            <span style="color: var(--text-muted); margin-left: 0.8rem; font-size: 0.8rem;">${utils.formatCurrency(service.total)}</span>
+          </div>
+        </div>
+      `).join('');
+    }
+    async function init() {
+      await initAuth();
+      const user = getCurrentUser();
+      if (!user) return;
+      initApp();
+      subscribe('services', () => { renderRecentServices(); updateStats(); });
+      subscribe('products', updateStats);
+      subscribe('clients', updateStats);
+      subscribe('sales', updateStats);
+      setTimeout(() => { renderRecentServices(); updateStats(); }, 500);
+      document.getElementById('logout-btn').addEventListener('click', handleLogout);
+    }
+    init();
+  </script>
+</body>
+</html>
