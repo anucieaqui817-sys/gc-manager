@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Produtos - Galego Cell Manager</title>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+  <div class="app-container">
+    <aside class="sidebar">
+      <div class="sidebar-brand"><h1>Galego Cell</h1></div>
+      <nav class="sidebar-nav">
+        <a href="/dashboard.html">📊 Dashboard</a>
+        <a href="/services.html">🔧 Ordens de Serviço</a>
+        <a href="/products.html" class="active">📦 Produtos</a>
+        <a href="/clients.html">👤 Clientes</a>
+        <a href="/sales.html">💰 Vendas</a>
+        <a href="/settings.html">⚙️ Configurações</a>
+        <a href="/reports.html">📈 Relatórios</a>
+      </nav>
+      <div class="sidebar-footer"><a href="#" id="logout-btn" style="color: var(--danger);">🚪 Sair</a></div>
+    </aside>
+    <main class="main-content">
+      <header class="flex-between" style="margin-bottom: 1.5rem; flex-wrap: wrap; gap: 1rem;">
+        <h1>📦 Produtos</h1>
+        <div style="display: flex; gap: 0.5rem; flex-wrap: wrap;">
+          <button class="btn btn-primary" id="btn-new-product">+ Novo Produto</button>
+          <input type="text" id="product-search" class="input-field" placeholder="Buscar..." style="width: 150px;" />
+        </div>
+      </header>
+      <div id="products-grid" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 1rem;">
+        <p style="color: var(--text-muted); text-align: center; grid-column: 1/-1; padding: 2rem;">Carregando...</p>
+      </div>
+    </main>
+  </div>
+  <div class="modal-overlay" id="product-modal">
+    <div class="modal">
+      <div class="modal-header">
+        <h2 id="product-modal-title">Novo Produto</h2>
+        <button class="modal-close" id="product-modal-close">✕</button>
+      </div>
+      <form id="product-form">
+        <div class="input-group">
+          <label for="product-name">Nome *</label>
+          <input type="text" id="product-name" class="input-field" placeholder="Nome do produto" required />
+        </div>
+        <div class="grid-2">
+          <div class="input-group">
+            <label for="product-category">Categoria</label>
+            <input type="text" id="product-category" class="input-field" placeholder="Acessórios, Peças..." />
+          </div>
+          <div class="input-group">
+            <label for="product-brand">Marca</label>
+            <input type="text" id="product-brand" class="input-field" placeholder="Marca" />
+          </div>
+        </div>
+        <div class="grid-2">
+          <div class="input-group">
+            <label for="product-price">Preço *</label>
+            <input type="number" id="product-price" class="input-field" placeholder="0.00" step="0.01" required />
+          </div>
+          <div class="input-group">
+            <label for="product-stock">Estoque *</label>
+            <input type="number" id="product-stock" class="input-field" placeholder="0" min="0" required />
+          </div>
+        </div>
+        <div class="input-group">
+          <label for="product-image">URL da Imagem</label>
+          <input type="url" id="product-image" class="input-field" placeholder="https://..." />
+        </div>
+        <button type="submit" class="btn btn-primary btn-block">Salvar</button>
+      </form>
+    </div>
+  </div>
+  <script type="module">
+    import { initApp, subscribe, getState, utils, handleLogout } from './js/app.js';
+    import { initAuth, getCurrentUser } from './js/auth.js';
+    import { createProduct, updateProduct, deleteProduct } from './js/products.js';
+    const modal = document.getElementById('product-modal');
+    const form = document.getElementById('product-form');
+    let editingId = null;
+    function renderProducts(filter = '') {
+      const products = getState('products');
+      const filtered = filter ? products.filter(p => p.name?.toLowerCase().includes(filter.toLowerCase()) || p.category?.toLowerCase().includes(filter.toLowerCase())) : products;
+      const container = document.getElementById('products-grid');
+      if (filtered.length === 0) {
+        container.innerHTML = `<div style="text-align: center; padding: 3rem; color: var(--text-muted); grid-column: 1/-1;"><p style="font-size: 3rem;">📦</p><p>Nenhum produto.</p></div>`;
+        return;
+      }
+      container.innerHTML = filtered.map(p => `
+        <div class="card">
+          <div style="height: 120px; overflow: hidden; border-radius: 0.5rem; margin-bottom: 0.5rem; background: var(--bg-light); display: flex; align-items: center; justify-content: center;">
+            <img src="${p.image || 'https://via.placeholder.com/200x120/1c160b/b8aa8d?text=Produto'}" alt="${p.name}" style="width: 100%; height: 100%; object-fit: cover;" onerror="this.src='https://via.placeholder.com/200x120/1c160b/b8aa8d?text=Produto'" />
+          </div>
+          <h3 style="font-size: 0.95rem;">${p.name}</h3>
+          <p style="color: var(--text-muted); font-size: 0.8rem;">${p.category || 'Sem categoria'}</p>
+          <div class="flex-between" style="margin-top: 0.5rem;">
+            <span style="font-weight: 700; color: var(--gold);">${utils.formatCurrency(p.price)}</span>
+            <span style="font-size: 0.8rem; color: ${(p.stock || 0) <= 5 ? 'var(--danger)' : 'var(--text-muted)'};">${p.stock || 0} un.</span>
+          </div>
+          <div style="display: flex; gap: 0.3rem; margin-top: 0.5rem;">
+            <button class="btn btn-secondary btn-sm btn-edit" data-id="${p.id}" style="flex:1;">✏️</button>
+            <button class="btn btn-danger btn-sm btn-delete" data-id="${p.id}" style="flex:1;">🗑️</button>
+          </div>
+        </div>
+      `).join('');
+      container.querySelectorAll('.btn-edit').forEach(btn => btn.addEventListener('click', () => openEditModal(btn.dataset.id)));
+      container.querySelectorAll('.btn-delete').forEach(btn => btn.addEventListener('click', async () => {
+        if (!confirm('Excluir este produto?')) return;
+        const result = await deleteProduct(btn.dataset.id);
+        if (result.success) { alert('Produto excluído!'); renderProducts(document.getElementById('product-search').value); }
+        else alert('Erro: ' + result.error);
+      }));
+    }
+    async function openEditModal(id) {
+      editingId = id;
+      const products = getState('products');
+      const product = products.find(p => p.id === id);
+      if (!product) return;
+      document.getElementById('product-modal-title').textContent = 'Editar Produto';
+      document.getElementById('product-name').value = product.name || '';
+      document.getElementById('product-category').value = product.category || '';
+      document.getElementById('product-brand').value = product.brand || '';
+      document.getElementById('product-price').value = product.price || '';
+      document.getElementById('product-stock').value = product.stock || '';
+      document.getElementById('product-image').value = product.image || '';
+      modal.classList.add('active');
+    }
+    document.getElementById('btn-new-product').addEventListener('click', () => {
+      editingId = null;
+      document.getElementById('product-modal-title').textContent = 'Novo Produto';
+      form.reset();
+      modal.classList.add('active');
+    });
+    document.getElementById('product-modal-close').addEventListener('click', () => modal.classList.remove('active'));
+    modal.addEventListener('click', (e) => { if (e.target === modal) modal.classList.remove('active'); });
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const data = {
+        name: document.getElementById('product-name').value.trim(),
+        category: document.getElementById('product-category').value.trim(),
+        brand: document.getElementById('product-brand').value.trim(),
+        price: parseFloat(document.getElementById('product-price').value) || 0,
+        stock: parseInt(document.getElementById('product-stock').value) || 0,
+        image: document.getElementById('product-image').value.trim()
+      };
+      let result;
+      if (editingId) result = await updateProduct(editingId, data);
+      else result = await createProduct(data);
+      if (result.success) {
+        modal.classList.remove('active');
+        alert(editingId ? 'Produto atualizado!' : 'Produto criado!');
+        renderProducts(document.getElementById('product-search').value);
+      } else alert('Erro: ' + result.error);
+    });
+    document.getElementById('product-search').addEventListener('input', (e) => renderProducts(e.target.value));
+    async function init() {
+      await initAuth();
+      const user = getCurrentUser();
+      if (!user) return;
+      initApp();
+      subscribe('products', () => renderProducts(document.getElementById('product-search').value));
+      renderProducts('');
+      document.getElementById('logout-btn').addEventListener('click', handleLogout);
+    }
+    init();
+  </script>
+</body>
+</html>
