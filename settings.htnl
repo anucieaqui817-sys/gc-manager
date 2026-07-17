@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Configurações - Galego Cell Manager</title>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+  <div class="app-container">
+    <aside class="sidebar">
+      <div class="sidebar-brand"><h1>Galego Cell</h1></div>
+      <nav class="sidebar-nav">
+        <a href="/dashboard.html">📊 Dashboard</a>
+        <a href="/services.html">🔧 Ordens de Serviço</a>
+        <a href="/products.html">📦 Produtos</a>
+        <a href="/clients.html">👤 Clientes</a>
+        <a href="/sales.html">💰 Vendas</a>
+        <a href="/settings.html" class="active">⚙️ Configurações</a>
+        <a href="/reports.html">📈 Relatórios</a>
+      </nav>
+      <div class="sidebar-footer"><a href="#" id="logout-btn" style="color: var(--danger);">🚪 Sair</a></div>
+    </aside>
+    <main class="main-content">
+      <h1 style="margin-bottom: 1.5rem;">⚙️ Configurações</h1>
+      <form id="settings-form" class="card">
+        <h2>Dados da Empresa</h2>
+        <div class="input-group">
+          <label for="settings-company">Nome da Loja *</label>
+          <input type="text" id="settings-company" class="input-field" placeholder="Galego Cell" required />
+        </div>
+        <div class="grid-2">
+          <div class="input-group">
+            <label for="settings-phone">Telefone</label>
+            <input type="tel" id="settings-phone" class="input-field" placeholder="(81) 99999-9999" />
+          </div>
+          <div class="input-group">
+            <label for="settings-email">E-mail</label>
+            <input type="email" id="settings-email" class="input-field" placeholder="contato@galegocell.com" />
+          </div>
+        </div>
+        <div class="input-group">
+          <label for="settings-address">Endereço</label>
+          <input type="text" id="settings-address" class="input-field" placeholder="Rua, número, bairro, cidade" />
+        </div>
+        <div class="input-group">
+          <label for="settings-footer">Rodapé da Nota</label>
+          <input type="text" id="settings-footer" class="input-field" placeholder="Obrigado pela preferência!" />
+        </div>
+        <button type="submit" class="btn btn-primary btn-block" style="margin-top: 1rem;">Salvar</button>
+      </form>
+    </main>
+  </div>
+  <script type="module">
+    import { initApp, handleLogout } from './js/app.js';
+    import { initAuth, getCurrentUser } from './js/auth.js';
+    import { getSettings, updateSettings } from './js/settings.js';
+    const form = document.getElementById('settings-form');
+    async function loadSettings() {
+      const result = await getSettings();
+      if (result.success) {
+        const data = result.data;
+        document.getElementById('settings-company').value = data.companyName || '';
+        document.getElementById('settings-phone').value = data.companyPhone || '';
+        document.getElementById('settings-email').value = data.companyEmail || '';
+        document.getElementById('settings-address').value = data.companyAddress || '';
+        document.getElementById('settings-footer').value = data.invoiceFooter || '';
+      }
+    }
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const data = {
+        companyName: document.getElementById('settings-company').value.trim(),
+        companyPhone: document.getElementById('settings-phone').value.trim(),
+        companyEmail: document.getElementById('settings-email').value.trim(),
+        companyAddress: document.getElementById('settings-address').value.trim(),
+        invoiceFooter: document.getElementById('settings-footer').value.trim()
+      };
+      const result = await updateSettings(data);
+      if (result.success) { alert('Salvo!'); loadSettings(); }
+      else alert('Erro: ' + result.error);
+    });
+    async function init() {
+      await initAuth();
+      const user = getCurrentUser();
+      if (!user) return;
+      initApp();
+      await loadSettings();
+      document.getElementById('logout-btn').addEventListener('click', handleLogout);
+    }
+    init();
+  </script>
+</body>
+</html>
