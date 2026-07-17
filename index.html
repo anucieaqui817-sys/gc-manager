@@ -42,9 +42,9 @@
       await initAuth();
       const user = getCurrentUser();
       if (user) {
-        window.location.href = '/dashboard.html';
+        window.location.href = 'dashboard.html';
       } else {
-        window.location.href = '/login.html';
+        window.location.href = 'login.html';
       }
     }
     redirect();
