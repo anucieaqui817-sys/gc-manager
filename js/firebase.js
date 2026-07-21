@@ -25,6 +25,9 @@ import {
   sendPasswordResetEmail
 } from "https://www.gstatic.com/firebasejs/12.16.0/firebase-auth.js";
 
+// ============================================================
+// CREDENCIAIS ORIGINAIS (AS MESMAS DE ANTES!)
+// ============================================================
 const firebaseConfig = {
   apiKey: "AIzaSyAD5SZZSkfgmzm4EdBaMWq_1L5G2CP9tNQ",
   authDomain: "galego-cell.firebaseapp.com",
