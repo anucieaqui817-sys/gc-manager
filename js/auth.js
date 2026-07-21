@@ -10,7 +10,7 @@ import {
 
 let currentUser = null;
 
-export function initAuth(redirectPath = '/dashboard.html') {
+export function initAuth(redirectPath = 'dashboard.html') {
   onAuthStateChanged(auth, (user) => {
     if (user) {
       currentUser = user;
@@ -19,8 +19,8 @@ export function initAuth(redirectPath = '/dashboard.html') {
       }
     } else {
       currentUser = null;
-      if (!window.location.pathname.includes('login.html')) {
-        window.location.href = '/login.html';
+      if (!window.location.pathname.includes('login.html') && !window.location.pathname.includes('index.html')) {
+        window.location.href = 'login.html';
       }
     }
   });
