@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Configurar Empresa - Gestor PRO+</title>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --neon-green: #00ff88;
+      --neon-cyan: #00d4ff;
+      --bg: #0a0a12;
+      --bg-card: rgba(16, 14, 30, 0.92);
+      --border: rgba(0, 255, 136, 0.15);
+      --text: #f0eaff;
+      --text-muted: #b8a6d6;
+      --text-dim: #6a5a8a;
+      --shadow: rgba(0, 255, 136, 0.1);
+    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: 'DM Sans', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 2rem 1rem;
+    }
+    .container {
+      max-width: 600px;
+      width: 100%;
+    }
+    .header {
+      text-align: center;
+      margin-bottom: 2rem;
+    }
+    .header h1 {
+      font-size: 2rem;
+      font-weight: 800;
+    }
+    .header h1 span {
+      background: linear-gradient(135deg, var(--neon-green), #00cc66);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    .header p {
+      color: var(--text-muted);
+      margin-top: 0.3rem;
+      font-size: 0.9rem;
+    }
+
+    .card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 1.5rem;
+      padding: 2rem;
+      transition: all 0.3s ease;
+    }
+    .card:hover {
+      border-color: rgba(0, 255, 136, 0.3);
+      box-shadow: 0 20px 60px var(--shadow);
+    }
+
+    .input-group { margin-bottom: 1.2rem; }
+    .input-group label {
+      display: block;
+      font-size: 0.7rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      color: var(--text-muted);
+      margin-bottom: 0.3rem;
+    }
+    .input-field {
+      width: 100%;
+      padding: 0.7rem 1rem;
+      border-radius: 0.8rem;
+      background: rgba(10, 10, 20, 0.6);
+      border: 1px solid var(--border);
+      color: var(--text);
+      font-size: 0.95rem;
+      font-family: 'DM Sans', sans-serif;
+      outline: none;
+      transition: all 0.3s ease;
+    }
+    .input-field:focus {
+      border-color: var(--neon-green);
+      box-shadow: 0 0 0 4px rgba(0,255,136,0.08);
+    }
+    .input-field::placeholder { color: var(--text-dim); }
+
+    .btn {
+      width: 100%;
+      padding: 0.8rem;
+      border: none;
+      border-radius: 0.8rem;
+      font-weight: 700;
+      font-size: 1rem;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      font-family: 'DM Sans', sans-serif;
+    }
+    .btn-primary {
+      background: linear-gradient(135deg, var(--neon-green), #00cc66);
+      color: #0a0a12;
+    }
+    .btn-primary:hover {
+      box-shadow: 0 0 40px rgba(0,255,136,0.3);
+      transform: translateY(-2px);
+    }
+
+    .logo-upload {
+      width: 100%;
+      padding: 2rem;
+      border: 2px dashed var(--border);
+      border-radius: 0.8rem;
+      text-align: center;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      color: var(--text-muted);
+    }
+    .logo-upload:hover {
+      border-color: var(--neon-green);
+      background: rgba(0,255,136,0.04);
+    }
+    .logo-upload .preview {
+      max-width: 120px;
+      max-height: 120px;
+      margin: 0 auto 0.5rem;
+      border-radius: 0.8rem;
+      display: none;
+    }
+    .logo-upload .preview.show { display: block; }
+
+    @media (max-width: 480px) {
+      .card { padding: 1.2rem; }
+      .header h1 { font-size: 1.5rem; }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+      <h1>⚡ Gestor <span>PRO+</span></h1>
+      <p>Configure os dados da sua empresa</p>
+    </div>
+
+    <div class="card">
+      <form id="empresa-form">
+        <div class="input-group">
+          <label for="empresa-nome">🏢 Nome da Empresa *</label>
+          <input type="text" id="empresa-nome" class="input-field" placeholder="Minha Assistência Técnica" required />
+        </div>
+
+        <div class="input-group">
+          <label for="empresa-documento">📄 CPF / CNPJ *</label>
+          <input type="text" id="empresa-documento" class="input-field" placeholder="00.000.000/0000-00" required />
+        </div>
+
+        <div class="input-group">
+          <label for="empresa-telefone">📞 Telefone</label>
+          <input type="tel" id="empresa-telefone" class="input-field" placeholder="(81) 99999-9999" />
+        </div>
+
+        <div class="input-group">
+          <label for="empresa-email">✉️ E-mail Corporativo</label>
+          <input type="email" id="empresa-email" class="input-field" placeholder="contato@empresa.com" />
+        </div>
+
+        <div class="input-group">
+          <label for="empresa-endereco">📍 Endereço</label>
+          <input type="text" id="empresa-endereco" class="input-field" placeholder="Rua, número, bairro, cidade" />
+        </div>
+
+        <div class="input-group">
+          <label>🖼️ Logo da Empresa</label>
+          <div class="logo-upload" id="logo-upload">
+            <img class="preview" id="logo-preview" />
+            <span>Clique para selecionar uma imagem</span>
+            <input type="file" id="logo-input" accept="image/*" style="display:none;" />
+          </div>
+        </div>
+
+        <button type="submit" class="btn btn-primary">💾 Salvar Configurações</button>
+      </form>
+    </div>
+  </div>
+
+  <script type="module">
+    import { getCurrentUser } from './js/auth.js';
+    import { db, doc, setDoc, updateDoc, serverTimestamp } from './js/firebase.js';
+
+    const form = document.getElementById('empresa-form');
+
+    // Upload de logo
+    const uploadArea = document.getElementById('logo-upload');
+    const logoInput = document.getElementById('logo-input');
+    const logoPreview = document.getElementById('logo-preview');
+
+    uploadArea.addEventListener('click', () => logoInput.click());
+    logoInput.addEventListener('change', (e) => {
+      const file = e.target.files[0];
+      if (file) {
+        const reader = new FileReader();
+        reader.onload = (ev) => {
+          logoPreview.src = ev.target.result;
+          logoPreview.classList.add('show');
+          uploadArea.querySelector('span').textContent = 'Clique para trocar a imagem';
+        };
+        reader.readAsDataURL(file);
+      }
+    });
+
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const user = getCurrentUser();
+      if (!user) {
+        alert('⚠️ Faça login primeiro!');
+        window.location.href = '/login.html';
+        return;
+      }
+
+      const empresaData = {
+        nome: document.getElementById('empresa-nome').value.trim(),
+        documento: document.getElementById('empresa-documento').value.trim(),
+        telefone: document.getElementById('empresa-telefone').value.trim(),
+        email: document.getElementById('empresa-email').value.trim(),
+        endereco: document.getElementById('empresa-endereco').value.trim(),
+        logo: logoPreview.classList.contains('show') ? logoPreview.src : '',
+        updatedAt: serverTimestamp()
+      };
+
+      try {
+        const userRef = doc(db, 'usuarios', user.uid);
+        await updateDoc(userRef, {
+          empresa: empresaData,
+          configurado: true,
+          updatedAt: serverTimestamp()
+        });
+        alert('✅ Empresa configurada com sucesso!');
+        window.location.href = '/dashboard.html';
+      } catch (error) {
+        console.error('Erro ao salvar empresa:', error);
+        alert('❌ Erro ao salvar: ' + error.message);
+      }
+    });
+  </script>
+</body>
+</html>
