@@ -2,7 +2,7 @@
 import { db, doc, setDoc, getDoc, updateDoc, serverTimestamp } from './firebase.js';
 
 const DEFAULT_SETTINGS = {
-  companyName: 'Galego Cell',
+  companyName: 'Gestor PRO+',  // ← Atualizado de "Galego Cell" para "Gestor PRO+"
   companyDocument: '',
   companyPhone: '',
   companyEmail: '',
