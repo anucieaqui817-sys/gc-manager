@@ -326,15 +326,15 @@
       <h1>Gestor <span>PRO+</span></h1>
     </div>
     <nav class="sidebar-nav">
-      <a href="/dashboard.html">📊 <span>Dashboard</span></a>
-      <a href="/services.html">🔧 <span>Ordens de Serviço</span></a>
-      <a href="/products.html">📦 <span>Produtos</span></a>
-      <a href="/clients.html">👤 <span>Clientes</span></a>
-      <a href="/sales.html">💰 <span>Vendas</span></a>
-      <a href="/fornecedores.html" class="active">📦 <span>Fornecedores</span></a>
-      <a href="/admin.html">👑 <span>Master PRO+</span></a>
-      <a href="/settings.html">⚙️ <span>Configurações</span></a>
-      <a href="/reports.html">📈 <span>Relatórios</span></a>
+      <a href="dashboard.html">📊 <span>Dashboard</span></a>
+      <a href="services.html">🔧 <span>Ordens de Serviço</span></a>
+      <a href="products.html">📦 <span>Produtos</span></a>
+      <a href="clients.html">👤 <span>Clientes</span></a>
+      <a href="sales.html">💰 <span>Vendas</span></a>
+      <a href="fornecedores.html" class="active">📦 <span>Fornecedores</span></a>
+      <a href="admin.html">👑 <span>Master PRO+</span></a>
+      <a href="settings.html">⚙️ <span>Configurações</span></a>
+      <a href="reports.html">📈 <span>Relatórios</span></a>
     </nav>
     <div class="sidebar-footer">
       <a href="#" id="logout-btn">🚪 <span>Sair</span></a>
@@ -431,6 +431,7 @@
     import { initApp, utils, handleLogout } from './js/app.js';
     import { initAuth, getCurrentUser } from './js/auth.js';
     import { db, collection, doc, getDocs, setDoc, updateDoc, deleteDoc, serverTimestamp } from './js/firebase.js';
+    import { verificarPlano } from './js/plano.js';
 
     let fornecedores = [];
 
@@ -633,6 +634,14 @@
       await initAuth();
       const user = getCurrentUser();
       if (!user) return;
+      
+      const plano = await verificarPlano();
+      if (plano.status === 'expirado') {
+        alert('⚠️ Seu plano expirou! Contrate um novo plano.');
+        window.location.href = 'plano.html';
+        return;
+      }
+      
       initApp();
       await carregarFornecedores();
       document.getElementById('logout-btn').addEventListener('click', handleLogout);
