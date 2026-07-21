@@ -119,7 +119,7 @@ export function getState(type) {
 export async function handleLogout() {
   const result = await logoutUser();
   if (result.success) {
-    window.location.href = '/login.html';
+    window.location.href = 'login.html';
   } else {
     alert('Erro ao sair: ' + result.error);
   }
