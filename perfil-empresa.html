@@ -191,6 +191,7 @@
   <script type="module">
     import { getCurrentUser } from './js/auth.js';
     import { db, doc, setDoc, updateDoc, serverTimestamp } from './js/firebase.js';
+    import { verificarPlano } from './js/plano.js';
 
     const form = document.getElementById('empresa-form');
 
@@ -218,7 +219,15 @@
       const user = getCurrentUser();
       if (!user) {
         alert('⚠️ Faça login primeiro!');
-        window.location.href = '/login.html';
+        window.location.href = 'login.html';
+        return;
+      }
+
+      // Verificar plano antes de salvar
+      const plano = await verificarPlano();
+      if (plano.status === 'expirado') {
+        alert('⚠️ Seu plano expirou! Contrate um novo plano.');
+        window.location.href = 'plano.html';
         return;
       }
 
@@ -240,7 +249,7 @@
           updatedAt: serverTimestamp()
         });
         alert('✅ Empresa configurada com sucesso!');
-        window.location.href = '/dashboard.html';
+        window.location.href = 'dashboard.html';
       } catch (error) {
         console.error('Erro ao salvar empresa:', error);
         alert('❌ Erro ao salvar: ' + error.message);
