@@ -3,23 +3,21 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Configurações - Galego Cell</title>
+  <title>Configurações - Gestor PRO+</title>
   <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet" />
   <style>
     :root {
-      --neon-purple: #b400ff;
-      --neon-pink: #ff00c8;
-      --neon-cyan: #00d4ff;
       --neon-green: #00ff88;
+      --neon-cyan: #00d4ff;
       --neon-gold: #ffd700;
       --neon-red: #ff3366;
       --bg: #0a0a12;
       --bg-card: rgba(16, 14, 30, 0.88);
-      --border: rgba(180, 0, 255, 0.15);
+      --border: rgba(0, 255, 136, 0.12);
       --text: #f0eaff;
       --text-muted: #b8a6d6;
       --text-dim: #6a5a8a;
-      --shadow: rgba(180, 0, 255, 0.15);
+      --shadow: rgba(0, 255, 136, 0.12);
     }
     * { margin: 0; padding: 0; box-sizing: border-box; }
     body {
@@ -31,7 +29,7 @@
     }
     ::-webkit-scrollbar { width: 6px; }
     ::-webkit-scrollbar-track { background: var(--bg); }
-    ::-webkit-scrollbar-thumb { background: var(--neon-purple); border-radius: 3px; }
+    ::-webkit-scrollbar-thumb { background: var(--neon-green); border-radius: 3px; }
 
     .sidebar {
       width: 220px;
@@ -55,7 +53,7 @@
     .sidebar-brand .logo {
       width: 40px;
       height: 40px;
-      background: linear-gradient(135deg, var(--neon-purple), var(--neon-pink));
+      background: linear-gradient(135deg, var(--neon-green), #00cc66);
       border-radius: 1rem;
       display: flex;
       align-items: center;
@@ -66,7 +64,7 @@
     }
     .sidebar-brand h1 { font-size: 1.1rem; font-weight: 800; }
     .sidebar-brand h1 span {
-      background: linear-gradient(135deg, var(--neon-purple), var(--neon-pink));
+      background: linear-gradient(135deg, var(--neon-green), #00cc66);
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
     }
@@ -89,11 +87,11 @@
       transition: all 0.3s ease;
       font-size: 0.9rem;
     }
-    .sidebar-nav a:hover { background: rgba(180, 0, 255, 0.08); color: var(--text); }
+    .sidebar-nav a:hover { background: rgba(0,255,136,0.06); color: var(--text); }
     .sidebar-nav a.active {
-      background: rgba(180, 0, 255, 0.12);
-      color: var(--neon-purple);
-      border-right: 3px solid var(--neon-purple);
+      background: rgba(0,255,136,0.08);
+      color: var(--neon-green);
+      border-right: 3px solid var(--neon-green);
     }
     .sidebar-footer {
       padding: 1rem 1.5rem;
@@ -121,7 +119,8 @@
       gap: 1rem;
     }
     .header h1 { font-size: 1.5rem; font-weight: 800; }
-    .header h1 span { color: var(--neon-purple); }
+    .header h1 span { color: var(--neon-green); }
+
     .btn {
       padding: 0.6rem 1.2rem;
       border-radius: 0.8rem;
@@ -136,11 +135,11 @@
       gap: 0.4rem;
     }
     .btn-primary {
-      background: linear-gradient(135deg, var(--neon-purple), var(--neon-pink));
+      background: linear-gradient(135deg, var(--neon-green), #00cc66);
       color: #0a0a12;
     }
     .btn-primary:hover {
-      box-shadow: 0 0 40px rgba(180, 0, 255, 0.3);
+      box-shadow: 0 0 40px rgba(0,255,136,0.3);
       transform: translateY(-2px);
     }
 
@@ -153,7 +152,7 @@
       transition: all 0.3s ease;
     }
     .settings-card:hover {
-      border-color: rgba(180, 0, 255, 0.25);
+      border-color: rgba(0,255,136,0.25);
       box-shadow: 0 0 30px var(--shadow);
     }
     .settings-card h2 {
@@ -162,6 +161,7 @@
       margin-bottom: 1.5rem;
       color: var(--neon-cyan);
     }
+
     .input-group { margin-bottom: 1.2rem; }
     .input-group label {
       display: block;
@@ -185,12 +185,11 @@
       transition: all 0.3s ease;
     }
     .input-field:focus {
-      border-color: var(--neon-purple);
+      border-color: var(--neon-green);
       box-shadow: 0 0 30px var(--shadow);
     }
     .input-field::placeholder { color: var(--text-dim); }
     .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
-
     .divider {
       border: none;
       border-top: 1px solid var(--border);
@@ -212,17 +211,19 @@
 
   <aside class="sidebar">
     <div class="sidebar-brand">
-      <div class="logo">GC</div>
-      <h1>Galego <span>Cell</span></h1>
+      <div class="logo">⚡</div>
+      <h1>Gestor <span>PRO+</span></h1>
     </div>
     <nav class="sidebar-nav">
-      <a href="/dashboard.html">📊 <span>Dashboard</span></a>
-      <a href="/services.html">🔧 <span>Ordens de Serviço</span></a>
-      <a href="/products.html">📦 <span>Produtos</span></a>
-      <a href="/clients.html">👤 <span>Clientes</span></a>
-      <a href="/sales.html">💰 <span>Vendas</span></a>
-      <a href="/settings.html" class="active">⚙️ <span>Configurações</span></a>
-      <a href="/reports.html">📈 <span>Relatórios</span></a>
+      <a href="dashboard.html">📊 <span>Dashboard</span></a>
+      <a href="services.html">🔧 <span>Ordens de Serviço</span></a>
+      <a href="products.html">📦 <span>Produtos</span></a>
+      <a href="clients.html">👤 <span>Clientes</span></a>
+      <a href="sales.html">💰 <span>Vendas</span></a>
+      <a href="fornecedores.html">📦 <span>Fornecedores</span></a>
+      <a href="admin.html">👑 <span>Master PRO+</span></a>
+      <a href="settings.html" class="active">⚙️ <span>Configurações</span></a>
+      <a href="reports.html">📈 <span>Relatórios</span></a>
     </nav>
     <div class="sidebar-footer">
       <a href="#" id="logout-btn">🚪 <span>Sair</span></a>
@@ -239,7 +240,7 @@
       <form id="settings-form">
         <div class="input-group">
           <label for="settings-company">Nome da Loja *</label>
-          <input type="text" id="settings-company" class="input-field" placeholder="Galego Cell" required />
+          <input type="text" id="settings-company" class="input-field" placeholder="Gestor PRO+" required />
         </div>
         <div class="grid-2">
           <div class="input-group">
@@ -248,7 +249,7 @@
           </div>
           <div class="input-group">
             <label for="settings-email">✉️ E-mail</label>
-            <input type="email" id="settings-email" class="input-field" placeholder="contato@galegocell.com" />
+            <input type="email" id="settings-email" class="input-field" placeholder="contato@gestorpro.com" />
           </div>
         </div>
         <div class="input-group">
@@ -273,6 +274,7 @@
     import { initApp, handleLogout } from './js/app.js';
     import { initAuth, getCurrentUser } from './js/auth.js';
     import { getSettings, updateSettings } from './js/settings.js';
+    import { verificarPlano } from './js/plano.js';
 
     const form = document.getElementById('settings-form');
 
@@ -298,14 +300,24 @@
         invoiceFooter: document.getElementById('settings-footer').value.trim()
       };
       const result = await updateSettings(data);
-      if (result.success) { alert('✅ Configurações salvas!'); loadSettings(); }
-      else alert('❌ Erro: ' + result.error);
+      if (result.success) {
+        alert('✅ Configurações salvas!');
+        loadSettings();
+      } else {
+        alert('❌ Erro: ' + result.error);
+      }
     });
 
     async function init() {
       await initAuth();
       const user = getCurrentUser();
       if (!user) return;
+      const plano = await verificarPlano();
+      if (plano.status === 'expirado') {
+        alert('⚠️ Seu plano expirou! Contrate um novo plano.');
+        window.location.href = 'plano.html';
+        return;
+      }
       initApp();
       await loadSettings();
       document.getElementById('logout-btn').addEventListener('click', handleLogout);
