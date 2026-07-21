@@ -3,23 +3,21 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Serviços - Galego Cell</title>
+  <title>Serviços - Gestor PRO+</title>
   <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet" />
   <style>
     :root {
-      --neon-purple: #b400ff;
-      --neon-pink: #ff00c8;
-      --neon-cyan: #00d4ff;
       --neon-green: #00ff88;
+      --neon-cyan: #00d4ff;
       --neon-gold: #ffd700;
       --neon-red: #ff3366;
       --bg: #0a0a12;
       --bg-card: rgba(16, 14, 30, 0.88);
-      --border: rgba(180, 0, 255, 0.15);
+      --border: rgba(0, 255, 136, 0.12);
       --text: #f0eaff;
       --text-muted: #b8a6d6;
       --text-dim: #6a5a8a;
-      --shadow: rgba(180, 0, 255, 0.15);
+      --shadow: rgba(0, 255, 136, 0.12);
     }
     * { margin: 0; padding: 0; box-sizing: border-box; }
     body {
@@ -31,9 +29,8 @@
     }
     ::-webkit-scrollbar { width: 6px; }
     ::-webkit-scrollbar-track { background: var(--bg); }
-    ::-webkit-scrollbar-thumb { background: var(--neon-purple); border-radius: 3px; }
+    ::-webkit-scrollbar-thumb { background: var(--neon-green); border-radius: 3px; }
 
-    /* Sidebar (igual ao dashboard) */
     .sidebar {
       width: 220px;
       background: var(--bg-card);
@@ -56,7 +53,7 @@
     .sidebar-brand .logo {
       width: 40px;
       height: 40px;
-      background: linear-gradient(135deg, var(--neon-purple), var(--neon-pink));
+      background: linear-gradient(135deg, var(--neon-green), #00cc66);
       border-radius: 1rem;
       display: flex;
       align-items: center;
@@ -67,7 +64,7 @@
     }
     .sidebar-brand h1 { font-size: 1.1rem; font-weight: 800; }
     .sidebar-brand h1 span {
-      background: linear-gradient(135deg, var(--neon-purple), var(--neon-pink));
+      background: linear-gradient(135deg, var(--neon-green), #00cc66);
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
     }
@@ -90,11 +87,11 @@
       transition: all 0.3s ease;
       font-size: 0.9rem;
     }
-    .sidebar-nav a:hover { background: rgba(180, 0, 255, 0.08); color: var(--text); }
+    .sidebar-nav a:hover { background: rgba(0,255,136,0.06); color: var(--text); }
     .sidebar-nav a.active {
-      background: rgba(180, 0, 255, 0.12);
-      color: var(--neon-purple);
-      border-right: 3px solid var(--neon-purple);
+      background: rgba(0,255,136,0.08);
+      color: var(--neon-green);
+      border-right: 3px solid var(--neon-green);
     }
     .sidebar-footer {
       padding: 1rem 1.5rem;
@@ -108,7 +105,6 @@
     }
     .sidebar-footer a:hover { color: var(--neon-gold); }
 
-    /* Main */
     .main {
       flex: 1;
       padding: 1.5rem;
@@ -123,12 +119,13 @@
       gap: 1rem;
     }
     .header h1 { font-size: 1.5rem; font-weight: 800; }
-    .header h1 span { color: var(--neon-purple); }
+    .header h1 span { color: var(--neon-green); }
     .header-actions {
       display: flex;
       gap: 0.5rem;
       flex-wrap: wrap;
     }
+
     .btn {
       padding: 0.6rem 1.2rem;
       border-radius: 0.8rem;
@@ -144,11 +141,11 @@
       gap: 0.4rem;
     }
     .btn-primary {
-      background: linear-gradient(135deg, var(--neon-purple), var(--neon-pink));
+      background: linear-gradient(135deg, var(--neon-green), #00cc66);
       color: #0a0a12;
     }
     .btn-primary:hover {
-      box-shadow: 0 0 40px rgba(180, 0, 255, 0.3);
+      box-shadow: 0 0 40px rgba(0,255,136,0.3);
       transform: translateY(-2px);
     }
     .btn-secondary {
@@ -157,42 +154,43 @@
       border: 1px solid var(--border);
     }
     .btn-secondary:hover {
-      border-color: var(--neon-purple);
+      border-color: var(--neon-green);
       box-shadow: 0 0 30px var(--shadow);
     }
     .btn-danger {
-      background: rgba(255, 51, 102, 0.15);
+      background: rgba(255,51,102,0.15);
       color: var(--neon-red);
-      border: 1px solid rgba(255, 51, 102, 0.2);
+      border: 1px solid rgba(255,51,102,0.2);
     }
     .btn-danger:hover {
-      background: rgba(255, 51, 102, 0.25);
-      box-shadow: 0 0 30px rgba(255, 51, 102, 0.1);
+      background: rgba(255,51,102,0.25);
     }
     .btn-sm { padding: 0.3rem 0.8rem; font-size: 0.75rem; }
 
-    select.input-field {
-      padding: 0.6rem 2rem 0.6rem 1rem;
+    .input-field {
+      padding: 0.6rem 1rem;
       border-radius: 0.8rem;
-      background: var(--bg-card);
+      background: rgba(10, 10, 20, 0.6);
       border: 1px solid var(--border);
       color: var(--text);
       font-size: 0.85rem;
       font-family: 'DM Sans', sans-serif;
       outline: none;
-      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+    .input-field:focus {
+      border-color: var(--neon-green);
+      box-shadow: 0 0 30px var(--shadow);
+    }
+    .input-field::placeholder { color: var(--text-dim); }
+    select.input-field {
       appearance: none;
       background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%23b8a6d6' d='M6 8L1 3h10z'/%3E%3C/svg%3E");
       background-repeat: no-repeat;
-      background-position: right 0.8rem center;
-      transition: all 0.3s ease;
-    }
-    select.input-field:focus {
-      border-color: var(--neon-purple);
-      box-shadow: 0 0 30px var(--shadow);
+      background-position: right 1rem center;
+      padding-right: 2.5rem;
     }
 
-    /* Card de OS */
     .os-card {
       background: var(--bg-card);
       border: 1px solid var(--border);
@@ -202,7 +200,7 @@
       transition: all 0.3s ease;
     }
     .os-card:hover {
-      border-color: rgba(180, 0, 255, 0.3);
+      border-color: rgba(0,255,136,0.3);
       box-shadow: 0 0 30px var(--shadow);
     }
     .os-card .os-header {
@@ -252,13 +250,20 @@
       text-transform: uppercase;
       letter-spacing: 0.04em;
     }
-    .badge-recebido { background: rgba(0, 212, 255, 0.15); color: var(--neon-cyan); }
-    .badge-analise { background: rgba(255, 215, 0, 0.15); color: var(--neon-gold); }
-    .badge-aprovado { background: rgba(0, 255, 136, 0.15); color: var(--neon-green); }
-    .badge-reparo { background: rgba(180, 0, 255, 0.15); color: var(--neon-purple); }
-    .badge-concluido { background: rgba(0, 255, 136, 0.1); color: #00cc66; }
-    .badge-entregue { background: rgba(0, 212, 255, 0.1); color: #0088ff; }
-    .badge-cancelado { background: rgba(255, 51, 102, 0.15); color: var(--neon-red); }
+    .badge-recebido { background: rgba(0,212,255,0.12); color: var(--neon-cyan); }
+    .badge-analise { background: rgba(255,215,0,0.12); color: var(--neon-gold); }
+    .badge-aprovado { background: rgba(0,255,136,0.12); color: var(--neon-green); }
+    .badge-reparo { background: rgba(180,0,255,0.12); color: #b400ff; }
+    .badge-concluido { background: rgba(0,255,136,0.08); color: #00cc66; }
+    .badge-entregue { background: rgba(0,212,255,0.08); color: #0088ff; }
+    .badge-cancelado { background: rgba(255,51,102,0.12); color: var(--neon-red); }
+
+    .empty-state {
+      text-align: center;
+      padding: 3rem;
+      color: var(--text-dim);
+    }
+    .empty-state .icon { font-size: 3rem; margin-bottom: 0.5rem; }
 
     /* Modal */
     .modal {
@@ -301,7 +306,7 @@
       border-bottom: 1px solid var(--border);
     }
     .modal-header h2 { font-size: 1.2rem; font-weight: 700; }
-    .modal-header h2 span { color: var(--neon-purple); }
+    .modal-header h2 span { color: var(--neon-green); }
     .modal-close {
       background: none;
       border: none;
@@ -322,32 +327,17 @@
       color: var(--text-muted);
       margin-bottom: 0.3rem;
     }
-    .input-field {
+    .input-group .input-field {
       width: 100%;
       padding: 0.7rem 1rem;
-      border-radius: 0.8rem;
-      background: rgba(10, 10, 20, 0.6);
-      border: 1px solid var(--border);
-      color: var(--text);
-      font-size: 0.9rem;
-      font-family: 'DM Sans', sans-serif;
-      outline: none;
-      transition: all 0.3s ease;
     }
-    .input-field:focus {
-      border-color: var(--neon-purple);
-      box-shadow: 0 0 30px var(--shadow);
-    }
-    .input-field::placeholder { color: var(--text-dim); }
-    textarea.input-field { min-height: 80px; resize: vertical; }
     .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
-
     .checkbox-grid {
       display: grid;
       grid-template-columns: 1fr 1fr;
       gap: 0.3rem;
       padding: 0.5rem;
-      background: rgba(10, 10, 20, 0.4);
+      background: rgba(10,10,20,0.4);
       border-radius: 0.8rem;
       border: 1px solid var(--border);
     }
@@ -365,13 +355,6 @@
       height: 16px;
     }
 
-    .empty-state {
-      text-align: center;
-      padding: 3rem;
-      color: var(--text-dim);
-    }
-    .empty-state .icon { font-size: 3rem; margin-bottom: 0.5rem; }
-
     @media (max-width: 768px) {
       .sidebar { width: 60px; padding: 1rem 0; }
       .sidebar-brand h1, .sidebar-nav a span, .sidebar-footer span { display: none; }
@@ -386,27 +369,27 @@
 </head>
 <body>
 
-  <!-- Sidebar -->
   <aside class="sidebar">
     <div class="sidebar-brand">
-      <div class="logo">GC</div>
-      <h1>Galego <span>Cell</span></h1>
+      <div class="logo">⚡</div>
+      <h1>Gestor <span>PRO+</span></h1>
     </div>
     <nav class="sidebar-nav">
-      <a href="/dashboard.html">📊 <span>Dashboard</span></a>
-      <a href="/services.html" class="active">🔧 <span>Ordens de Serviço</span></a>
-      <a href="/products.html">📦 <span>Produtos</span></a>
-      <a href="/clients.html">👤 <span>Clientes</span></a>
-      <a href="/sales.html">💰 <span>Vendas</span></a>
-      <a href="/settings.html">⚙️ <span>Configurações</span></a>
-      <a href="/reports.html">📈 <span>Relatórios</span></a>
+      <a href="dashboard.html">📊 <span>Dashboard</span></a>
+      <a href="services.html" class="active">🔧 <span>Ordens de Serviço</span></a>
+      <a href="products.html">📦 <span>Produtos</span></a>
+      <a href="clients.html">👤 <span>Clientes</span></a>
+      <a href="sales.html">💰 <span>Vendas</span></a>
+      <a href="fornecedores.html">📦 <span>Fornecedores</span></a>
+      <a href="admin.html">👑 <span>Master PRO+</span></a>
+      <a href="settings.html">⚙️ <span>Configurações</span></a>
+      <a href="reports.html">📈 <span>Relatórios</span></a>
     </nav>
     <div class="sidebar-footer">
       <a href="#" id="logout-btn">🚪 <span>Sair</span></a>
     </div>
   </aside>
 
-  <!-- Main -->
   <main class="main">
     <div class="header">
       <h1>🔧 <span>Ordens de Serviço</span></h1>
@@ -429,7 +412,6 @@
     <div id="services-list"><div class="empty-state"><div class="icon">🔧</div><p>Carregando...</p></div></div>
   </main>
 
-  <!-- Modal -->
   <div class="modal" id="service-modal">
     <div class="modal-content">
       <div class="modal-header">
@@ -506,6 +488,7 @@
     import { initApp, subscribe, getState, utils, handleLogout } from './js/app.js';
     import { initAuth, getCurrentUser } from './js/auth.js';
     import { createService, updateService, deleteService } from './js/services.js';
+    import { verificarPlano } from './js/plano.js';
 
     const modal = document.getElementById('service-modal');
     const form = document.getElementById('service-form');
@@ -613,6 +596,12 @@
       await initAuth();
       const user = getCurrentUser();
       if (!user) return;
+      const plano = await verificarPlano();
+      if (plano.status === 'expirado') {
+        alert('⚠️ Seu plano expirou! Contrate um novo plano.');
+        window.location.href = 'plano.html';
+        return;
+      }
       initApp();
       subscribe('services', () => renderServices(document.getElementById('filter-status').value));
       renderServices('all');
