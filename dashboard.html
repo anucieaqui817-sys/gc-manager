@@ -298,15 +298,15 @@
       <h1>Gestor <span>PRO+</span></h1>
     </div>
     <nav class="sidebar-nav">
-      <a href="/dashboard.html" class="active">📊 <span>Dashboard</span></a>
-      <a href="/services.html">🔧 <span>Ordens de Serviço</span></a>
-      <a href="/products.html">📦 <span>Produtos</span></a>
-      <a href="/clients.html">👤 <span>Clientes</span></a>
-      <a href="/sales.html">💰 <span>Vendas</span></a>
-      <a href="/fornecedores.html">📦 <span>Fornecedores</span></a>
-      <a href="/admin.html">👑 <span>Master PRO+</span></a>
-      <a href="/settings.html">⚙️ <span>Configurações</span></a>
-      <a href="/reports.html">📈 <span>Relatórios</span></a>
+      <a href="dashboard.html" class="active">📊 <span>Dashboard</span></a>
+      <a href="services.html">🔧 <span>Ordens de Serviço</span></a>
+      <a href="products.html">📦 <span>Produtos</span></a>
+      <a href="clients.html">👤 <span>Clientes</span></a>
+      <a href="sales.html">💰 <span>Vendas</span></a>
+      <a href="fornecedores.html">📦 <span>Fornecedores</span></a>
+      <a href="admin.html">👑 <span>Master PRO+</span></a>
+      <a href="settings.html">⚙️ <span>Configurações</span></a>
+      <a href="reports.html">📈 <span>Relatórios</span></a>
     </nav>
     <div class="sidebar-footer">
       <a href="#" id="logout-btn">🚪 <span>Sair</span></a>
@@ -345,17 +345,17 @@
     </div>
 
     <div class="actions">
-      <a href="/services.html?action=new" class="primary">🔧 Nova OS</a>
-      <a href="/sales.html?action=new" class="primary">💰 Nova Venda</a>
-      <a href="/clients.html?action=new">👤 Novo Cliente</a>
-      <a href="/products.html?action=new">📦 Novo Produto</a>
-      <a href="/admin.html" class="admin">👑 Master PRO+</a>
+      <a href="services.html?action=new" class="primary">🔧 Nova OS</a>
+      <a href="sales.html?action=new" class="primary">💰 Nova Venda</a>
+      <a href="clients.html?action=new">👤 Novo Cliente</a>
+      <a href="products.html?action=new">📦 Novo Produto</a>
+      <a href="admin.html" class="admin">👑 Master PRO+</a>
     </div>
 
     <div class="card">
       <div class="card-header">
         <h2>📋 Últimas OS</h2>
-        <a href="/services.html">Ver todas →</a>
+        <a href="services.html">Ver todas →</a>
       </div>
       <div id="recent-services">
         <p style="color: var(--text-muted);">Carregando...</p>
@@ -390,7 +390,7 @@
         badge.classList.add('expirado');
         setTimeout(() => {
           if (confirm('⚠️ Seu plano expirou! Deseja contratar um novo plano?')) {
-            window.location.href = '/plano.html';
+            window.location.href = 'plano.html';
           }
         }, 1000);
       } else if (info.status === 'ativo') {
@@ -405,7 +405,7 @@
       if (!configurado) {
         setTimeout(() => {
           if (confirm('⚠️ Configure os dados da sua empresa para continuar!')) {
-            window.location.href = '/perfil-empresa.html';
+            window.location.href = 'perfil-empresa.html';
           }
         }, 500);
       }
