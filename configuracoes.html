@@ -1,95 +1,364 @@
-// js/fornecedores.js
-import { db, collection, doc, getDocs, setDoc, updateDoc, deleteDoc, serverTimestamp } from './firebase.js';
-
-// Criar fornecedor
-export async function criarFornecedor(data) {
-  try {
-    const ref = doc(collection(db, 'fornecedores'));
-    await setDoc(ref, {
-      ...data,
-      credito: 0,
-      compras: [],
-      createdAt: serverTimestamp(),
-      updatedAt: serverTimestamp()
-    });
-    return { success: true, id: ref.id };
-  } catch (error) {
-    return { success: false, error: error.message };
-  }
-}
-
-// Listar fornecedores
-export async function listarFornecedores() {
-  try {
-    const ref = collection(db, 'fornecedores');
-    const snapshot = await getDocs(ref);
-    return snapshot.docs.map(doc => ({
-      id: doc.id,
-      ...doc.data()
-    }));
-  } catch (error) {
-    console.error('Erro ao listar fornecedores:', error);
-    return [];
-  }
-}
-
-// Registrar compra
-export async function registrarCompra(fornecedorId, compra) {
-  try {
-    const ref = doc(db, 'fornecedores', fornecedorId);
-    const fornecedor = await getDoc(ref);
-    if (!fornecedor.exists()) {
-      return { success: false, error: 'Fornecedor não encontrado' };
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Configurações - Gestor PRO+</title>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --neon-green: #00ff88;
+      --neon-cyan: #00d4ff;
+      --neon-gold: #ffd700;
+      --neon-red: #ff3366;
+      --neon-purple: #b400ff;
+      --neon-pink: #ff00c8;
+      --neon-orange: #ff8800;
+      --bg: #0a0a12;
+      --bg-card: rgba(16, 14, 30, 0.88);
+      --border: rgba(0, 255, 136, 0.12);
+      --text: #f0eaff;
+      --text-muted: #b8a6d6;
+      --text-dim: #6a5a8a;
+      --shadow: rgba(0, 255, 136, 0.12);
     }
-    const data = fornecedor.data();
-    const compras = data.compras || [];
-    compras.push({
-      ...compra,
-      data: new Date().toISOString()
-    });
-    await updateDoc(ref, {
-      compras: compras,
-      updatedAt: serverTimestamp()
-    });
-    return { success: true };
-  } catch (error) {
-    return { success: false, error: error.message };
-  }
-}
-
-// Registrar devolução
-export async function registrarDevolucao(fornecedorId, devolucao) {
-  try {
-    const ref = doc(db, 'fornecedores', fornecedorId);
-    const fornecedor = await getDoc(ref);
-    if (!fornecedor.exists()) {
-      return { success: false, error: 'Fornecedor não encontrado' };
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: 'DM Sans', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      display: flex;
     }
-    const data = fornecedor.data();
-    const compras = data.compras || [];
-    compras.push({
-      tipo: 'devolucao',
-      ...devolucao,
-      data: new Date().toISOString()
-    });
-    await updateDoc(ref, {
-      compras: compras,
-      credito: (data.credito || 0) + (devolucao.credito || 0),
-      updatedAt: serverTimestamp()
-    });
-    return { success: true };
-  } catch (error) {
-    return { success: false, error: error.message };
-  }
-}
+    ::-webkit-scrollbar { width: 6px; }
+    ::-webkit-scrollbar-track { background: var(--bg); }
+    ::-webkit-scrollbar-thumb { background: var(--neon-green); border-radius: 3px; }
 
-// Excluir fornecedor
-export async function excluirFornecedor(fornecedorId) {
-  try {
-    const ref = doc(db, 'fornecedores', fornecedorId);
-    await deleteDoc(ref);
-    return { success: true };
-  } catch (error) {
-    return { success: false, error: error.message };
-  }
-}
+    .sidebar {
+      width: 220px;
+      background: var(--bg-card);
+      border-right: 1px solid var(--border);
+      padding: 1.5rem 0;
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+      position: sticky;
+      top: 0;
+      backdrop-filter: blur(12px);
+    }
+    .sidebar-brand {
+      padding: 0 1.5rem;
+      margin-bottom: 2rem;
+      display: flex;
+      align-items: center;
+      gap: 0.8rem;
+    }
+    .sidebar-brand .logo {
+      width: 40px;
+      height: 40px;
+      background: linear-gradient(135deg, var(--neon-green), #00cc66);
+      border-radius: 1rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 800;
+      font-size: 1.1rem;
+      color: #0a0a12;
+    }
+    .sidebar-brand h1 { font-size: 1.1rem; font-weight: 800; }
+    .sidebar-brand h1 span {
+      background: linear-gradient(135deg, var(--neon-green), #00cc66);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    .sidebar-nav {
+      flex: 1;
+      padding: 0 0.8rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.2rem;
+    }
+    .sidebar-nav a {
+      display: flex;
+      align-items: center;
+      gap: 0.8rem;
+      padding: 0.7rem 1rem;
+      border-radius: 0.8rem;
+      color: var(--text-muted);
+      text-decoration: none;
+      font-weight: 500;
+      transition: all 0.3s ease;
+      font-size: 0.9rem;
+    }
+    .sidebar-nav a:hover { background: rgba(0,255,136,0.06); color: var(--text); }
+    .sidebar-nav a.active {
+      background: rgba(0,255,136,0.08);
+      color: var(--neon-green);
+      border-right: 3px solid var(--neon-green);
+    }
+    .sidebar-footer {
+      padding: 1rem 1.5rem;
+      border-top: 1px solid var(--border);
+    }
+    .sidebar-footer a {
+      color: var(--neon-red);
+      text-decoration: none;
+      font-weight: 500;
+      transition: color 0.3s ease;
+    }
+    .sidebar-footer a:hover { color: var(--neon-gold); }
+
+    .main {
+      flex: 1;
+      padding: 1.5rem;
+      overflow-x: hidden;
+    }
+    .header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 1.5rem;
+      flex-wrap: wrap;
+      gap: 1rem;
+    }
+    .header h1 { font-size: 1.5rem; font-weight: 800; }
+    .header h1 span { color: var(--neon-green); }
+
+    .card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 1.2rem;
+      padding: 1.5rem;
+      margin-bottom: 1.5rem;
+      transition: all 0.3s ease;
+    }
+    .card:hover {
+      border-color: rgba(0,255,136,0.2);
+    }
+    .card-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 1rem;
+    }
+    .card-header h2 { font-size: 1.1rem; font-weight: 700; }
+
+    .theme-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+      gap: 1rem;
+    }
+    .theme-option {
+      background: var(--bg);
+      border: 2px solid var(--border);
+      border-radius: 1rem;
+      padding: 1rem;
+      text-align: center;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+    .theme-option:hover {
+      border-color: var(--neon-green);
+      transform: translateY(-3px);
+    }
+    .theme-option.active {
+      border-color: var(--neon-gold);
+      box-shadow: 0 0 30px rgba(255,215,0,0.1);
+    }
+    .theme-option .color-preview {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      margin: 0 auto 0.5rem;
+      border: 2px solid var(--border);
+    }
+    .theme-option .theme-name {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+    }
+
+    .btn {
+      padding: 0.6rem 1.2rem;
+      border-radius: 0.8rem;
+      border: none;
+      font-weight: 600;
+      font-size: 0.85rem;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      font-family: 'DM Sans', sans-serif;
+    }
+    .btn-primary {
+      background: linear-gradient(135deg, var(--neon-green), #00cc66);
+      color: #0a0a12;
+    }
+    .btn-primary:hover {
+      box-shadow: 0 0 40px rgba(0,255,136,0.3);
+      transform: translateY(-2px);
+    }
+
+    @media (max-width: 768px) {
+      .sidebar { width: 60px; padding: 1rem 0; }
+      .sidebar-brand h1, .sidebar-nav a span, .sidebar-footer span { display: none; }
+      .sidebar-nav a { justify-content: center; padding: 0.7rem; }
+      .sidebar-brand { justify-content: center; padding: 0; }
+      .main { padding: 1rem; }
+      .theme-grid { grid-template-columns: repeat(3, 1fr); }
+    }
+  </style>
+</head>
+<body>
+
+  <aside class="sidebar">
+    <div class="sidebar-brand">
+      <div class="logo">⚡</div>
+      <h1>Gestor <span>PRO+</span></h1>
+    </div>
+    <nav class="sidebar-nav">
+      <a href="/dashboard.html">📊 <span>Dashboard</span></a>
+      <a href="/services.html">🔧 <span>Ordens de Serviço</span></a>
+      <a href="/products.html">📦 <span>Produtos</span></a>
+      <a href="/clients.html">👤 <span>Clientes</span></a>
+      <a href="/sales.html">💰 <span>Vendas</span></a>
+      <a href="/fornecedores.html">📦 <span>Fornecedores</span></a>
+      <a href="/admin.html">👑 <span>Master PRO+</span></a>
+      <a href="/settings.html" class="active">⚙️ <span>Configurações</span></a>
+      <a href="/reports.html">📈 <span>Relatórios</span></a>
+    </nav>
+    <div class="sidebar-footer">
+      <a href="#" id="logout-btn">🚪 <span>Sair</span></a>
+    </div>
+  </aside>
+
+  <main class="main">
+    <div class="header">
+      <h1>⚙️ <span>Configurações</span></h1>
+    </div>
+
+    <!-- Temas -->
+    <div class="card">
+      <div class="card-header">
+        <h2>🎨 Temas do Sistema</h2>
+        <span style="font-size:0.8rem;color:var(--text-muted);">Clique para aplicar</span>
+      </div>
+      <div class="theme-grid" id="theme-grid">
+        <div class="theme-option active" data-theme="green">
+          <div class="color-preview" style="background:linear-gradient(135deg,#00ff88,#00cc66);"></div>
+          <div class="theme-name">Verde Neon</div>
+        </div>
+        <div class="theme-option" data-theme="purple">
+          <div class="color-preview" style="background:linear-gradient(135deg,#b400ff,#8800cc);"></div>
+          <div class="theme-name">Roxo Neon</div>
+        </div>
+        <div class="theme-option" data-theme="pink">
+          <div class="color-preview" style="background:linear-gradient(135deg,#ff00c8,#cc0099);"></div>
+          <div class="theme-name">Rosa Neon</div>
+        </div>
+        <div class="theme-option" data-theme="cyan">
+          <div class="color-preview" style="background:linear-gradient(135deg,#00d4ff,#0088cc);"></div>
+          <div class="theme-name">Azul Neon</div>
+        </div>
+        <div class="theme-option" data-theme="gold">
+          <div class="color-preview" style="background:linear-gradient(135deg,#ffd700,#ff8800);"></div>
+          <div class="theme-name">Dourado Neon</div>
+        </div>
+        <div class="theme-option" data-theme="red">
+          <div class="color-preview" style="background:linear-gradient(135deg,#ff3366,#cc0022);"></div>
+          <div class="theme-name">Vermelho Neon</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Dados da Empresa -->
+    <div class="card">
+      <div class="card-header">
+        <h2>🏢 Dados da Empresa</h2>
+        <a href="/perfil-empresa.html" class="btn btn-primary" style="font-size:0.8rem;padding:0.3rem 1rem;">Editar</a>
+      </div>
+      <div id="empresa-info" style="color:var(--text-muted);">
+        <p>Carregando...</p>
+      </div>
+    </div>
+  </main>
+
+  <script type="module">
+    import { initApp, handleLogout } from './js/app.js';
+    import { initAuth, getCurrentUser } from './js/auth.js';
+    import { getEmpresa } from './js/empresa.js';
+
+    // Temas
+    const themeOptions = document.querySelectorAll('.theme-option');
+    const savedTheme = localStorage.getItem('theme') || 'green';
+
+    function applyTheme(theme) {
+      const colors = {
+        green: { primary: '#00ff88', secondary: '#00cc66' },
+        purple: { primary: '#b400ff', secondary: '#8800cc' },
+        pink: { primary: '#ff00c8', secondary: '#cc0099' },
+        cyan: { primary: '#00d4ff', secondary: '#0088cc' },
+        gold: { primary: '#ffd700', secondary: '#ff8800' },
+        red: { primary: '#ff3366', secondary: '#cc0022' }
+      };
+
+      const color = colors[theme] || colors.green;
+      document.documentElement.style.setProperty('--neon-green', color.primary);
+      document.documentElement.style.setProperty('--neon-cyan', color.primary);
+      
+      // Atualizar gradientes
+      document.querySelectorAll('.logo').forEach(el => {
+        el.style.background = `linear-gradient(135deg, ${color.primary}, ${color.secondary})`;
+      });
+      document.querySelectorAll('.btn-primary').forEach(el => {
+        el.style.background = `linear-gradient(135deg, ${color.primary}, ${color.secondary})`;
+      });
+      
+      // Atualizar bordas
+      document.querySelectorAll('.border-neon').forEach(el => {
+        el.style.borderColor = color.primary;
+      });
+
+      // Atualizar ativo
+      themeOptions.forEach(opt => {
+        opt.classList.toggle('active', opt.dataset.theme === theme);
+      });
+
+      localStorage.setItem('theme', theme);
+    }
+
+    themeOptions.forEach(opt => {
+      opt.addEventListener('click', () => {
+        applyTheme(opt.dataset.theme);
+      });
+    });
+
+    applyTheme(savedTheme);
+
+    // Carregar empresa
+    async function carregarEmpresa() {
+      const empresa = await getEmpresa();
+      const container = document.getElementById('empresa-info');
+      if (empresa) {
+        container.innerHTML = `
+          <p><strong>Nome:</strong> ${empresa.nome || 'Não configurado'}</p>
+          <p><strong>Documento:</strong> ${empresa.documento || 'Não configurado'}</p>
+          <p><strong>Telefone:</strong> ${empresa.telefone || 'Não configurado'}</p>
+          <p><strong>E-mail:</strong> ${empresa.email || 'Não configurado'}</p>
+          <p><strong>Endereço:</strong> ${empresa.endereco || 'Não configurado'}</p>
+        `;
+      } else {
+        container.innerHTML = '<p>Nenhum dado configurado. <a href="/perfil-empresa.html">Clique aqui para configurar</a></p>';
+      }
+    }
+
+    async function init() {
+      await initAuth();
+      const user = getCurrentUser();
+      if (!user) return;
+      initApp();
+      await carregarEmpresa();
+      document.getElementById('logout-btn').addEventListener('click', handleLogout);
+    }
+    init();
+  </script>
+
+</body>
+</html>
