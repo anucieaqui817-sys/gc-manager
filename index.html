@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Galego Cell Manager</title>
+  <title>Gestor PRO+</title>
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; }
     body {
@@ -18,7 +18,7 @@
     .bg {
       position: fixed;
       inset: 0;
-      background: radial-gradient(ellipse at 20% 50%, rgba(180,0,255,0.08) 0%, transparent 60%),
+      background: radial-gradient(ellipse at 20% 50%, rgba(0,255,136,0.08) 0%, transparent 60%),
                   radial-gradient(ellipse at 80% 20%, rgba(0,212,255,0.05) 0%, transparent 50%),
                   #0a0a12;
     }
@@ -32,7 +32,7 @@
       width: 80px;
       height: 80px;
       margin: 0 auto 1rem;
-      background: linear-gradient(135deg, #b400ff, #ff00c8);
+      background: linear-gradient(135deg, #00ff88, #00cc66);
       border-radius: 1.5rem;
       display: flex;
       align-items: center;
@@ -40,12 +40,12 @@
       font-size: 2.2rem;
       font-weight: 800;
       color: #0a0a12;
-      box-shadow: 0 0 60px rgba(180,0,255,0.2);
+      box-shadow: 0 0 60px rgba(0,255,136,0.2);
       animation: pulse 2s ease-in-out infinite;
     }
     @keyframes pulse {
-      0%, 100% { box-shadow: 0 0 40px rgba(180,0,255,0.2); }
-      50% { box-shadow: 0 0 80px rgba(255,0,200,0.3); }
+      0%, 100% { box-shadow: 0 0 40px rgba(0,255,136,0.2); }
+      50% { box-shadow: 0 0 80px rgba(0,255,136,0.3); }
     }
     .loader h1 {
       font-size: 1.8rem;
@@ -53,7 +53,7 @@
       color: #f0eaff;
     }
     .loader h1 span {
-      background: linear-gradient(135deg, #b400ff, #ff00c8);
+      background: linear-gradient(135deg, #00ff88, #00cc66);
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
     }
@@ -67,8 +67,8 @@
       width: 40px;
       height: 40px;
       margin: 1.5rem auto 0;
-      border: 3px solid rgba(180,0,255,0.15);
-      border-top-color: #b400ff;
+      border: 3px solid rgba(0,255,136,0.15);
+      border-top-color: #00ff88;
       border-radius: 50%;
       animation: spin 0.8s linear infinite;
     }
@@ -82,8 +82,8 @@
 <body>
   <div class="bg"></div>
   <div class="loader">
-    <div class="logo">GC</div>
-    <h1>Galego <span>Cell</span></h1>
+    <div class="logo">⚡</div>
+    <h1>Gestor <span>PRO+</span></h1>
     <p>⚡ CARREGANDO SISTEMA ⚡</p>
     <div class="spinner"></div>
   </div>
