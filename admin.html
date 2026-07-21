@@ -286,15 +286,15 @@
       <h1>Gestor <span>PRO+</span></h1>
     </div>
     <nav class="sidebar-nav">
-      <a href="/dashboard.html">📊 <span>Dashboard</span></a>
-      <a href="/services.html">🔧 <span>Ordens de Serviço</span></a>
-      <a href="/products.html">📦 <span>Produtos</span></a>
-      <a href="/clients.html">👤 <span>Clientes</span></a>
-      <a href="/sales.html">💰 <span>Vendas</span></a>
-      <a href="/fornecedores.html">📦 <span>Fornecedores</span></a>
-      <a href="/admin.html" class="active">👑 <span>Master PRO+</span></a>
-      <a href="/settings.html">⚙️ <span>Configurações</span></a>
-      <a href="/reports.html">📈 <span>Relatórios</span></a>
+      <a href="dashboard.html">📊 <span>Dashboard</span></a>
+      <a href="services.html">🔧 <span>Ordens de Serviço</span></a>
+      <a href="products.html">📦 <span>Produtos</span></a>
+      <a href="clients.html">👤 <span>Clientes</span></a>
+      <a href="sales.html">💰 <span>Vendas</span></a>
+      <a href="fornecedores.html">📦 <span>Fornecedores</span></a>
+      <a href="admin.html" class="active">👑 <span>Master PRO+</span></a>
+      <a href="settings.html">⚙️ <span>Configurações</span></a>
+      <a href="reports.html">📈 <span>Relatórios</span></a>
     </nav>
     <div class="sidebar-footer">
       <a href="#" id="logout-btn">🚪 <span>Sair</span></a>
@@ -310,7 +310,6 @@
       <span style="color:var(--text-muted);font-size:0.85rem;" id="current-date"></span>
     </div>
 
-    <!-- Stats Administrativos -->
     <div class="stats" id="admin-stats">
       <div class="stat-card">
         <div class="value" id="total-users">0</div>
@@ -330,7 +329,6 @@
       </div>
     </div>
 
-    <!-- Gerenciar Usuários -->
     <div class="card">
       <div class="card-header">
         <h2>👤 Gerenciar Usuários</h2>
@@ -341,7 +339,6 @@
       </div>
     </div>
 
-    <!-- Ações Rápidas -->
     <div class="card">
       <div class="card-header">
         <h2>⚡ Ações Rápidas</h2>
@@ -380,7 +377,6 @@
           ...doc.data()
         }));
 
-        // Atualizar stats
         const total = usuarios.length;
         const ativos = usuarios.filter(u => u.ativo !== false).length;
         const testes = usuarios.filter(u => u.plano === 'teste' && u.ativo !== false).length;
@@ -391,7 +387,6 @@
         document.getElementById('total-testes').textContent = testes;
         document.getElementById('total-pagos').textContent = pagos;
 
-        // Renderizar lista
         const container = document.getElementById('users-list');
         if (usuarios.length === 0) {
           container.innerHTML = '<div class="empty-state">👤 Nenhum usuário encontrado.</div>';
@@ -433,7 +428,6 @@
           `;
         }).join('');
 
-        // Event listeners
         container.querySelectorAll('.btn-renovar').forEach(btn => {
           btn.addEventListener('click', async (e) => {
             const id = e.target.dataset.id;
@@ -491,13 +485,10 @@
       }
     }
 
-    // Ações rápidas
     document.getElementById('btn-refresh').addEventListener('click', carregarUsuarios);
-
     document.getElementById('btn-add-user').addEventListener('click', () => {
-      window.location.href = '/login.html';
+      window.location.href = 'login.html';
     });
-
     document.getElementById('btn-expired').addEventListener('click', async () => {
       try {
         const usuariosRef = collection(db, 'usuarios');
@@ -526,10 +517,9 @@
       const user = getCurrentUser();
       if (!user) return;
       
-      // Verificar se é admin (você)
       if (user.email !== 'gc_saas@gmail.com') {
         alert('⚠️ Acesso restrito ao administrador!');
-        window.location.href = '/dashboard.html';
+        window.location.href = 'dashboard.html';
         return;
       }
 
