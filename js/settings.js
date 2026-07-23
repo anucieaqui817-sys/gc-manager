@@ -2,7 +2,7 @@
 import { db, doc, setDoc, getDoc, updateDoc, serverTimestamp } from './firebase.js';
 
 const DEFAULT_SETTINGS = {
-  companyName: 'Gestor PRO+',  // ← Atualizado de "Galego Cell" para "Gestor PRO+"
+  companyName: 'Gestor PRO+',
   companyDocument: '',
   companyPhone: '',
   companyEmail: '',
@@ -34,10 +34,25 @@ export async function getSettings() {
 export async function updateSettings(settingsData) {
   try {
     const settingsRef = doc(db, 'settings', 'company');
-    await updateDoc(settingsRef, {
-      ...settingsData,
-      updatedAt: serverTimestamp()
-    });
+    
+    // Verifica se o documento existe
+    const snapshot = await getDoc(settingsRef);
+    
+    if (snapshot.exists()) {
+      // Se existe, atualiza
+      await updateDoc(settingsRef, {
+        ...settingsData,
+        updatedAt: serverTimestamp()
+      });
+    } else {
+      // Se não existe, cria com os dados
+      await setDoc(settingsRef, {
+        ...DEFAULT_SETTINGS,
+        ...settingsData,
+        updatedAt: serverTimestamp()
+      });
+    }
+    
     return { success: true };
   } catch (error) {
     console.error('Erro ao atualizar configurações:', error);
