@@ -60,16 +60,71 @@ export const utils = {
   }
 };
 
+// 🔥 FUNÇÃO PARA CARREGAR DADOS MANUALMENTE (FALLBACK)
+export async function carregarDados() {
+  try {
+    console.log('🔄 Carregando dados manualmente...');
+    
+    // Produtos
+    const productsRef = collection(db, 'products');
+    const productsSnap = await getDocs(productsRef);
+    AppState.products = productsSnap.docs.map(doc => ({
+      id: doc.id,
+      ...doc.data()
+    }));
+    notifyListeners('products');
+    console.log('✅ Produtos carregados:', AppState.products.length);
+
+    // Clientes
+    const clientsRef = collection(db, 'clients');
+    const clientsSnap = await getDocs(clientsRef);
+    AppState.clients = clientsSnap.docs.map(doc => ({
+      id: doc.id,
+      ...doc.data()
+    }));
+    notifyListeners('clients');
+
+    // Serviços
+    const servicesRef = collection(db, 'services');
+    const servicesSnap = await getDocs(servicesRef);
+    AppState.services = servicesSnap.docs.map(doc => ({
+      id: doc.id,
+      ...doc.data()
+    }));
+    notifyListeners('services');
+
+    // Vendas
+    const salesRef = collection(db, 'sales');
+    const salesSnap = await getDocs(salesRef);
+    AppState.sales = salesSnap.docs.map(doc => ({
+      id: doc.id,
+      ...doc.data()
+    }));
+    notifyListeners('sales');
+
+    console.log('✅ Todos os dados carregados!');
+  } catch (error) {
+    console.error('❌ Erro ao carregar dados:', error);
+  }
+}
+
 export function initListeners() {
+  console.log('🔥 initListeners chamado');
+  
+  // Produtos
   const productsQuery = query(collection(db, 'products'), orderBy('name'));
   onSnapshot(productsQuery, (snapshot) => {
+    console.log('📦 Snapshot de products recebido:', snapshot.docs.length);
     AppState.products = snapshot.docs.map(doc => ({
       id: doc.id,
       ...doc.data()
     }));
     notifyListeners('products');
+  }, (error) => {
+    console.error('❌ Erro no snapshot de products:', error);
   });
 
+  // Clientes
   const clientsQuery = query(collection(db, 'clients'), orderBy('name'));
   onSnapshot(clientsQuery, (snapshot) => {
     AppState.clients = snapshot.docs.map(doc => ({
@@ -79,6 +134,7 @@ export function initListeners() {
     notifyListeners('clients');
   });
 
+  // Serviços
   const servicesQuery = query(collection(db, 'services'), orderBy('createdAt', 'desc'));
   onSnapshot(servicesQuery, (snapshot) => {
     AppState.services = snapshot.docs.map(doc => ({
@@ -88,6 +144,7 @@ export function initListeners() {
     notifyListeners('services');
   });
 
+  // Vendas
   const salesQuery = query(collection(db, 'sales'), orderBy('createdAt', 'desc'));
   onSnapshot(salesQuery, (snapshot) => {
     AppState.sales = snapshot.docs.map(doc => ({
@@ -109,6 +166,7 @@ export function subscribe(type, callback) {
     AppState.listeners[type] = [];
   }
   AppState.listeners[type].push(callback);
+  // Chama imediatamente com os dados atuais
   callback(AppState[type]);
 }
 
@@ -126,8 +184,14 @@ export async function handleLogout() {
 }
 
 export function initApp() {
+  console.log('🚀 initApp chamado');
   AppState.user = getCurrentUser();
+  
+  // Inicia os listeners
   initListeners();
+  
+  // 🔥 CARREGA DADOS MANUALMENTE COMO FALLBACK
+  carregarDados();
   
   const logoutBtn = document.getElementById('logout-btn');
   if (logoutBtn) {
