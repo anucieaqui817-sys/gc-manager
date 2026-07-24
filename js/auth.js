@@ -9,19 +9,39 @@ import {
 } from './firebase.js';
 
 let currentUser = null;
+let authInitialized = false;
+let authListeners = [];
 
 export function initAuth(redirectPath = 'dashboard.html') {
+  console.log('🔥 initAuth chamado');
+  
   onAuthStateChanged(auth, (user) => {
+    console.log('📡 onAuthStateChanged:', user ? user.email : 'null');
+    currentUser = user;
+    authInitialized = true;
+    
+    // Notifica todos os listeners
+    authListeners.forEach(cb => cb(user));
+    
     if (user) {
-      currentUser = user;
       if (window.location.pathname.includes('login.html')) {
         window.location.href = redirectPath;
       }
     } else {
-      currentUser = null;
       if (!window.location.pathname.includes('login.html') && !window.location.pathname.includes('index.html')) {
         window.location.href = 'login.html';
       }
+    }
+  });
+}
+
+// Função para aguardar a autenticação ficar pronta
+export function waitForAuth() {
+  return new Promise((resolve) => {
+    if (authInitialized) {
+      resolve(currentUser);
+    } else {
+      authListeners.push(resolve);
     }
   });
 }
