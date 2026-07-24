@@ -1,6 +1,6 @@
 // js/app.js
 import { db, collection, getDocs, onSnapshot, query, orderBy } from './firebase.js';
-import { getCurrentUser, isAuthenticated, logoutUser } from './auth.js';
+import { getCurrentUser, isAuthenticated, logoutUser, waitForAuth } from './auth.js';
 
 const AppState = {
   user: null,
@@ -60,11 +60,11 @@ export const utils = {
   }
 };
 
-// 🔥 FUNÇÃO PARA CARREGAR DADOS MANUALMENTE (FALLBACK)
+// 🔥 FUNÇÃO PARA CARREGAR DADOS MANUALMENTE
 export async function carregarDados() {
+  console.log('🔄 Carregando dados manualmente...');
+  
   try {
-    console.log('🔄 Carregando dados manualmente...');
-    
     // Produtos
     const productsRef = collection(db, 'products');
     const productsSnap = await getDocs(productsRef);
@@ -166,7 +166,6 @@ export function subscribe(type, callback) {
     AppState.listeners[type] = [];
   }
   AppState.listeners[type].push(callback);
-  // Chama imediatamente com os dados atuais
   callback(AppState[type]);
 }
 
@@ -183,15 +182,19 @@ export async function handleLogout() {
   }
 }
 
-export function initApp() {
+export async function initApp() {
   console.log('🚀 initApp chamado');
-  AppState.user = getCurrentUser();
+  
+  // Aguarda a autenticação ficar pronta
+  const user = await waitForAuth();
+  AppState.user = user;
+  console.log('✅ Usuário autenticado:', user ? user.email : 'null');
   
   // Inicia os listeners
   initListeners();
   
-  // 🔥 CARREGA DADOS MANUALMENTE COMO FALLBACK
-  carregarDados();
+  // Carrega dados manualmente como fallback
+  await carregarDados();
   
   const logoutBtn = document.getElementById('logout-btn');
   if (logoutBtn) {
