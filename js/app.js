@@ -1,4 +1,4 @@
-// js/app.js
+// js/app.js - VERSÃO SIMPLIFICADA PARA TESTE
 import { db, collection, getDocs, onSnapshot, query, orderBy } from './firebase.js';
 import { getCurrentUser, isAuthenticated, logoutUser, waitForAuth } from './auth.js';
 
@@ -60,99 +60,32 @@ export const utils = {
   }
 };
 
-// 🔥 FUNÇÃO PARA CARREGAR DADOS MANUALMENTE
-export async function carregarDados() {
-  console.log('🔄 Carregando dados manualmente...');
-  
+// 🔥 FUNÇÃO DE LOGOUT MELHORADA
+export async function handleLogout() {
+  console.log('🚪 Tentando fazer logout...');
   try {
-    // Produtos
-    const productsRef = collection(db, 'products');
-    const productsSnap = await getDocs(productsRef);
-    AppState.products = productsSnap.docs.map(doc => ({
-      id: doc.id,
-      ...doc.data()
-    }));
-    notifyListeners('products');
-    console.log('✅ Produtos carregados:', AppState.products.length);
-
-    // Clientes
-    const clientsRef = collection(db, 'clients');
-    const clientsSnap = await getDocs(clientsRef);
-    AppState.clients = clientsSnap.docs.map(doc => ({
-      id: doc.id,
-      ...doc.data()
-    }));
-    notifyListeners('clients');
-
-    // Serviços
-    const servicesRef = collection(db, 'services');
-    const servicesSnap = await getDocs(servicesRef);
-    AppState.services = servicesSnap.docs.map(doc => ({
-      id: doc.id,
-      ...doc.data()
-    }));
-    notifyListeners('services');
-
-    // Vendas
-    const salesRef = collection(db, 'sales');
-    const salesSnap = await getDocs(salesRef);
-    AppState.sales = salesSnap.docs.map(doc => ({
-      id: doc.id,
-      ...doc.data()
-    }));
-    notifyListeners('sales');
-
-    console.log('✅ Todos os dados carregados!');
+    const result = await logoutUser();
+    console.log('📡 Resultado do logout:', result);
+    if (result.success) {
+      console.log('✅ Logout bem-sucedido, redirecionando...');
+      window.location.href = 'login.html';
+    } else {
+      console.error('❌ Erro no logout:', result.error);
+      alert('Erro ao sair: ' + result.error);
+    }
   } catch (error) {
-    console.error('❌ Erro ao carregar dados:', error);
+    console.error('❌ Erro inesperado no logout:', error);
+    alert('Erro ao sair: ' + error.message);
   }
 }
 
+export async function carregarDados() {
+  console.log('🔄 Carregando dados manualmente...');
+  // ... resto do código (mantenha o que já tem)
+}
+
 export function initListeners() {
-  console.log('🔥 initListeners chamado');
-  
-  // Produtos
-  const productsQuery = query(collection(db, 'products'), orderBy('name'));
-  onSnapshot(productsQuery, (snapshot) => {
-    console.log('📦 Snapshot de products recebido:', snapshot.docs.length);
-    AppState.products = snapshot.docs.map(doc => ({
-      id: doc.id,
-      ...doc.data()
-    }));
-    notifyListeners('products');
-  }, (error) => {
-    console.error('❌ Erro no snapshot de products:', error);
-  });
-
-  // Clientes
-  const clientsQuery = query(collection(db, 'clients'), orderBy('name'));
-  onSnapshot(clientsQuery, (snapshot) => {
-    AppState.clients = snapshot.docs.map(doc => ({
-      id: doc.id,
-      ...doc.data()
-    }));
-    notifyListeners('clients');
-  });
-
-  // Serviços
-  const servicesQuery = query(collection(db, 'services'), orderBy('createdAt', 'desc'));
-  onSnapshot(servicesQuery, (snapshot) => {
-    AppState.services = snapshot.docs.map(doc => ({
-      id: doc.id,
-      ...doc.data()
-    }));
-    notifyListeners('services');
-  });
-
-  // Vendas
-  const salesQuery = query(collection(db, 'sales'), orderBy('createdAt', 'desc'));
-  onSnapshot(salesQuery, (snapshot) => {
-    AppState.sales = snapshot.docs.map(doc => ({
-      id: doc.id,
-      ...doc.data()
-    }));
-    notifyListeners('sales');
-  });
+  // ... resto do código (mantenha o que já tem)
 }
 
 function notifyListeners(type) {
@@ -173,32 +106,23 @@ export function getState(type) {
   return AppState[type] || [];
 }
 
-export async function handleLogout() {
-  const result = await logoutUser();
-  if (result.success) {
-    window.location.href = 'login.html';
-  } else {
-    alert('Erro ao sair: ' + result.error);
-  }
-}
-
 export async function initApp() {
   console.log('🚀 initApp chamado');
   
-  // Aguarda a autenticação ficar pronta
   const user = await waitForAuth();
   AppState.user = user;
   console.log('✅ Usuário autenticado:', user ? user.email : 'null');
   
-  // Inicia os listeners
   initListeners();
-  
-  // Carrega dados manualmente como fallback
   await carregarDados();
   
+  // 🔥 LOGOUT MELHORADO
   const logoutBtn = document.getElementById('logout-btn');
   if (logoutBtn) {
+    console.log('🔘 Botão de logout encontrado');
     logoutBtn.addEventListener('click', handleLogout);
+  } else {
+    console.warn('⚠️ Botão de logout não encontrado');
   }
 }
 
