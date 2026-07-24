@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Teste Firebase</title>
+</head>
+<body>
+  <h1>Teste de Conexão com Firebase</h1>
+  <div id="resultado">Carregando...</div>
+
+  <script type="module">
+    import { db, collection, getDocs } from './js/firebase.js';
+    import { initAuth, getCurrentUser } from './js/auth.js';
+
+    async function testar() {
+      const resultado = document.getElementById('resultado');
+      
+      try {
+        // 1. Testar autenticação
+        resultado.innerHTML = '🔄 Testando autenticação...';
+        await initAuth();
+        const user = getCurrentUser();
+        
+        if (!user) {
+          resultado.innerHTML = '❌ Usuário não está logado. Faça login primeiro.';
+          return;
+        }
+        
+        resultado.innerHTML = `✅ Usuário logado: ${user.email}<br>`;
+        
+        // 2. Testar leitura do Firebase
+        resultado.innerHTML += '🔄 Testando leitura do Firebase...';
+        const productsRef = collection(db, 'products');
+        const snapshot = await getDocs(productsRef);
+        const produtos = snapshot.docs.map(doc => doc.data());
+        
+        resultado.innerHTML += `<br>✅ Produtos encontrados: ${produtos.length}`;
+        
+        if (produtos.length > 0) {
+          resultado.innerHTML += `<br>📦 Primeiro produto: ${produtos[0].name}`;
+        } else {
+          resultado.innerHTML += `<br>⚠️ Nenhum produto encontrado.`;
+        }
+        
+      } catch (error) {
+        resultado.innerHTML = `❌ Erro: ${error.message}`;
+        console.error(error);
+      }
+    }
+
+    testar();
+  </script>
+</body>
+</html>
